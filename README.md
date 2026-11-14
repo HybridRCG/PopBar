@@ -251,6 +251,7 @@ differs, because the two systems expose selections differently:
 | Notices a drag | Accessibility event tap | low-level mouse hook (`WH_MOUSE_LL`) |
 | Reads the selection | Accessibility (`AXSelectedText`) | UI Automation `TextPattern`, then a Ctrl+C fallback |
 | Permission | Accessibility grant | none |
+| Password fields | `IsSecureEventInputEnabled()` | UI Automation `IsPassword` |
 | Keys (cut/paste/select all) | `CGEvent` | `keybd_event` |
 
 ```

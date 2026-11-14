@@ -239,3 +239,34 @@ so signing never raises a password dialog.
 Grant Accessibility once after the first signed build. Rebuilds do not need it
 again. If the identity is ever deleted, a new one is created and one re-grant is
 required.
+
+## Windows
+
+The app is Electron and runs on both platforms. Only the selection helper
+differs, because the two systems expose selections differently:
+
+| | macOS | Windows |
+| --- | --- | --- |
+| Helper | `native/main.swift`, built to `native/bin/popbar-ax` | `native/windows/popbar-win.ps1` |
+| Notices a drag | Accessibility event tap | low-level mouse hook (`WH_MOUSE_LL`) |
+| Reads the selection | Accessibility (`AXSelectedText`) | UI Automation `TextPattern`, then a Ctrl+C fallback |
+| Permission | Accessibility grant | none |
+| Keys (cut/paste/select all) | `CGEvent` | `keybd_event` |
+
+```
+npm install
+npm start          # runs from source
+npm run dist:win   # NSIS installer in .build/
+```
+
+Windows needs no compiler or SDK: the helper's small C# pieces are compiled at
+start-up with `Add-Type`, using the PowerShell that ships with Windows. The
+helper speaks the same JSON-lines protocol as the macOS one, so the app has a
+single code path: heartbeats, clicks, selections and key requests.
+
+Extension actions declare the shell they are written for (`"shell":
+"powershell"` in `Config.json`). On Windows, bash ones are skipped and logged as
+`extension-skipped` instead of appearing in the bar and failing on every click.
+The bundled action library is written for bash, so on Windows the built-in
+actions are what you get: Copy, Cut, Paste, Select All, Open Link, Search,
+Email, UPPERCASE/lowercase/Capitalize and Speak.

@@ -1,0 +1,5 @@
+node_modules/
+.signing/
+.build/
+native/bin/
+.DS_Store

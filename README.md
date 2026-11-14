@@ -264,9 +264,7 @@ start-up with `Add-Type`, using the PowerShell that ships with Windows. The
 helper speaks the same JSON-lines protocol as the macOS one, so the app has a
 single code path: heartbeats, clicks, selections and key requests.
 
-Extension actions declare the shell they are written for (`"shell":
-"powershell"` in `Config.json`). On Windows, bash ones are skipped and logged as
-`extension-skipped` instead of appearing in the bar and failing on every click.
-The bundled action library is written for bash, so on Windows the built-in
-actions are what you get: Copy, Cut, Paste, Select All, Open Link, Search,
-Email, UPPERCASE/lowercase/Capitalize and Speak.
+Extension actions are bash scripts, so they are not loaded on Windows (logged
+once as `extensions-skipped`) rather than appearing in the bar and failing on
+every click. Windows gets the built-in actions: Copy, Cut, Paste, Select All,
+Open Link, Search, Email, UPPERCASE/lowercase/Capitalize and Speak.

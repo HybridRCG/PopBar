@@ -291,6 +291,24 @@ section { padding: 56px 0; border-top: 1px solid var(--line); }
   font-weight: 700;
 }
 
+/* --------------------------------------------------------------- support */
+
+.support {
+  margin-top: 22px;
+  padding: 20px 22px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius);
+  background: var(--page-tint);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.support h3 { margin: 0 0 6px; }
+.support p { margin: 0; max-width: 60ch; }
+.support .btn { align-self: center; }
+
 /* ----------------------------------------------------------------- steps */
 
 .steps { margin: 18px 0 0; padding-left: 22px; display: grid; gap: 12px; max-width: 72ch; }

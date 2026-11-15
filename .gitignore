@@ -3,3 +3,7 @@ node_modules/
 .build/
 native/bin/
 .DS_Store
+
+# The application source is kept out of the public repository (releases and
+# the project page only). The files stay on disk for local builds.
+src/

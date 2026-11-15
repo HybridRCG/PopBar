@@ -170,8 +170,7 @@ one.
 - **Appearance** — bar height (26–80 px) with a live preview, labels either on
   hover above the icons or permanently under them, and dividers between icons
   (off, extra space, or a hairline). The preview is drawn from the bar's own
-  stylesheet (`src/bar/appearance.css`) and icon set (`src/bar/icons.js`), so it
-  cannot drift from the real bar. A bar that is already on screen adopts the
+  stylesheet and icon set, so it cannot drift from the real bar. A bar that is already on screen adopts the
   new look immediately.
 - **Actions** — on/off for every built-in and extension action, and their order:
   drag a row by its ⠿ handle, or use ↑ ↓.
@@ -215,6 +214,10 @@ compiled at start-up with `Add-Type`, using the PowerShell that ships with
 Windows. Both speak the same protocol, so the app has a single code path.
 
 ## Running from source
+
+The application source is **not published** in this repository: it holds the
+released builds, the update manifests and the project page. These notes are for
+a working copy of the app.
 
 ```sh
 npm install      # also compiles the macOS helper (needs Xcode CLT)
@@ -296,8 +299,8 @@ that go away.
 
 ## Support
 
-PopBar is free, and the source is here in full. If it earns its place in your
-day, there is a tip jar:
+PopBar is free to download and use. If it earns its place in your day, there is
+a tip jar:
 
 **[☕ Buy me a coffee](https://buymeacoffee.com/hybridrcg)**
 

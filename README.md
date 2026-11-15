@@ -14,12 +14,35 @@ selected text ──▶ selection helper (native, per OS) ──▶ PopBar bar �
 
 | | Download | Then |
 |---|---|---|
-| **Windows 10/11, 64-bit** | `PopBar.Setup.<version>.exe` | Run it. SmartScreen warns once because the build is not code-signed: *More info → Run anyway*. |
+| **Windows 10/11, 64-bit** | `PopBar-Setup-<version>.exe` | Run it. SmartScreen warns once because the build is not code-signed: *More info → Run anyway*. |
 | **macOS 12+, Apple Silicon and Intel** | `PopBar-<version>-universal.dmg` | Open it, drag PopBar to Applications. The build is not notarized: right-click → *Open* the first time. |
 
-Both are attached to the Releases page (GitHub rewrites the spaces in the
-Windows file name to dots). The macOS app is a universal binary — one download
-runs natively on Apple Silicon and on Intel.
+Both are attached to the Releases page. The macOS app is a universal binary —
+one download runs natively on Apple Silicon and on Intel.
+
+## Updates
+
+Installed copies update themselves from GitHub Releases through
+`electron-updater` (that is why a build without `latest.yml` / `latest-mac.yml`
+can never update). Ten seconds after launch PopBar checks quietly, downloads a
+newer version in the background, and notifies once it is ready. The version line
+in the menu turns into the state of that check — *Checking…*, *Downloading… 42%*,
+*Restart to Update to 1.0.3* — and clicking it restarts into the new version. An
+update that was downloaded also installs when you quit normally. **A check that
+fails on its own is a single log line, never a popup**; only a check you started
+yourself reports back.
+
+Two things stop this working today, and both are about how the app is
+published rather than the updater:
+
+- **The repository is private.** An unauthenticated client gets `404` from the
+  releases API — the log shows `update-error 404`. Pointing `build.publish` at a
+  public repository (or hosting the artifacts elsewhere) is what makes updates
+  real.
+- **macOS builds are only ad-hoc signed.** Squirrel.Mac validates the signature
+  of the downloaded app, and an ad-hoc signature has no team to validate, so a
+  Mac update is expected to download and then refuse to install. A Developer ID
+  certificate is the fix; Windows has no such requirement.
 
 On first launch macOS asks for **Accessibility** permission: System Settings →
 Privacy & Security → Accessibility → switch on **PopBar**. Until that is granted
@@ -217,14 +240,14 @@ All artifacts land in `.build/` (not `dist`), which is git-ignored:
 
 | File | What it is |
 |---|---|
-| `.build/PopBar Setup <version>.exe` | Windows installer (x64, NSIS, one-click, per-user) |
+| `.build/PopBar-Setup-<version>.exe` | Windows installer (x64, NSIS, one-click, per-user) |
 | `.build/PopBar-<version>-universal.dmg` | macOS disk image (Apple Silicon + Intel) |
 | `.build/PopBar-<version>-universal.zip` | macOS app as a zip, for tools that prefer it |
 | `.build/mac-universal/PopBar.app` | the raw macOS app |
 
-On the Releases page those two installers appear as `PopBar.Setup.<version>.exe`
-and `PopBar-<version>-universal.dmg` — GitHub rewrites the spaces in a built file
-name to dots. Every release lists the SHA-256 of each asset in its notes.
+Those names are the release asset names verbatim, which matters: `latest.yml`
+and `latest-mac.yml` point at them, and an updater looks for exactly those files.
+Every release lists the SHA-256 of each asset in its notes.
 
 The output folder is `.build`, not `dist`, so Spotlight and Launchpad only ever
 show the one installed copy — two bundles with the same name are confusing to
@@ -265,7 +288,11 @@ npm version patch          # bump package.json + lockfile
 npm run dist:mac           # macOS artifacts
 npm run dist:win           # Windows artifact
 shasum -a 256 .build/*.exe .build/*.dmg
-gh release create v<version> ".build/PopBar Setup <version>.exe" ".build/PopBar-<version>-universal.dmg" \
+gh release create v<version> \
+  ".build/PopBar-Setup-<version>.exe" \
+  ".build/PopBar-<version>-universal.dmg" \
+  ".build/PopBar-<version>-universal.zip" \
+  .build/latest.yml .build/latest-mac.yml \
   --title "PopBar <version>" --notes "…"
 ```
 

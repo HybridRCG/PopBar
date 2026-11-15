@@ -34,16 +34,18 @@
       no leaving the window you are in.
     </p>
     <div class="actions">
-      <a class="btn primary" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-1.0.6-universal.dmg">
-        <span class="btn-label">Download for macOS</span>
-        <span class="btn-meta">12+ · Apple Silicon &amp; Intel · 232 MB</span>
+      <!-- hrefs start on the releases page and are replaced with the exact
+           asset by downloads.js; with JavaScript off they still work. -->
+      <a class="btn primary" data-download="mac" href="https://github.com/HybridRCG/PopBar/releases/latest">
+        <span class="btn-label" data-role="label" data-hero="Download for macOS">Download for macOS</span>
+        <span class="btn-meta" data-role="meta">Apple Silicon &amp; Intel</span>
       </a>
-      <a class="btn" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-Setup-1.0.6.exe">
-        <span class="btn-label">Download for Windows</span>
-        <span class="btn-meta">10 / 11 · 64-bit · 115 MB</span>
+      <a class="btn" data-download="win" href="https://github.com/HybridRCG/PopBar/releases/latest">
+        <span class="btn-label" data-role="label" data-hero="Download for Windows">Download for Windows</span>
+        <span class="btn-meta" data-role="meta">64-bit</span>
       </a>
     </div>
-    <p class="fineprint">Version 1.0.6 · free · source on <a href="https://github.com/HybridRCG/PopBar" rel="noopener">GitHub</a></p>
+    <p class="fineprint">Version <span data-version>1.0.6</span> · free · source on <a href="https://github.com/HybridRCG/PopBar" rel="noopener">GitHub</a></p>
 
     <div class="demo" aria-hidden="true">
       <div class="demo-text">
@@ -95,16 +97,20 @@
       <div class="card">
         <h3>macOS</h3>
         <p class="req">macOS 12 or later · Apple Silicon and Intel (one universal app)</p>
-        <a class="btn primary" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-1.0.6-universal.dmg">PopBar-1.0.6-universal.dmg</a>
+        <a class="btn primary" data-download="mac" href="https://github.com/HybridRCG/PopBar/releases/latest">
+          <span data-role="label" data-card="1">PopBar-1.0.6-universal.dmg</span>
+        </a>
         <p class="fineprint">Open the disk image, drag PopBar to Applications. First launch: right-click → <em>Open</em> (the build is not notarized), then allow <strong>Accessibility</strong> so it can see selections.</p>
-        <p class="fineprint">SHA-256<br /><code>e01d096ec2f4b1cf2091a1ed0a41ba11c20a59a65d76ccadd58d466c4f9a7ecc</code></p>
+        <p class="fineprint">SHA-256 for every file is printed in the <a data-release-link href="https://github.com/HybridRCG/PopBar/releases/latest" rel="noopener">release notes</a>.</p>
       </div>
       <div class="card">
         <h3>Windows</h3>
         <p class="req">Windows 10 or 11 · 64-bit</p>
-        <a class="btn" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-Setup-1.0.6.exe">PopBar-Setup-1.0.6.exe</a>
+        <a class="btn" data-download="win" href="https://github.com/HybridRCG/PopBar/releases/latest">
+          <span data-role="label" data-card="1">PopBar-Setup-1.0.6.exe</span>
+        </a>
         <p class="fineprint">Run the installer. SmartScreen warns once because the build is not code-signed: <em>More info → Run anyway</em>. No permission prompt after that.</p>
-        <p class="fineprint">SHA-256<br /><code>8bd338967b379fbbab0aa923d9c2a6ea13adbc588a2a4e8de8ab9228dba5d88f</code></p>
+        <p class="fineprint">SHA-256 for every file is printed in the <a data-release-link href="https://github.com/HybridRCG/PopBar/releases/latest" rel="noopener">release notes</a>.</p>
       </div>
     </div>
   </section>
@@ -211,6 +217,8 @@
   </p>
   <p class="fineprint">© 2026 Groblers CSS. PopBar is not affiliated with PopClip. Tips are a thank-you, not a license purchase.</p>
 </footer>
+
+<script src="downloads.js" defer></script>
 
 </body>
 </html>

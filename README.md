@@ -15,11 +15,11 @@ selected text ──▶ selection helper (native, per OS) ──▶ PopBar bar �
 | | Download | Then |
 |---|---|---|
 | **Windows 10/11, 64-bit** | `PopBar.Setup.<version>.exe` | Run it. SmartScreen warns once because the build is not code-signed: *More info → Run anyway*. |
-| **macOS 12+, Apple Silicon** | `PopBar-<version>-arm64.dmg` | Open it, drag PopBar to Applications. The build is not notarized: right-click → *Open* the first time. |
+| **macOS 12+, Apple Silicon and Intel** | `PopBar-<version>-universal.dmg` | Open it, drag PopBar to Applications. The build is not notarized: right-click → *Open* the first time. |
 
 Both are attached to the Releases page (GitHub rewrites the spaces in the
-Windows file name to dots). The macOS build is
-`arm64` only; Intel Macs need a separate build (see *Building* below).
+Windows file name to dots). The macOS app is a universal binary — one download
+runs natively on Apple Silicon and on Intel.
 
 On first launch macOS asks for **Accessibility** permission: System Settings →
 Privacy & Security → Accessibility → switch on **PopBar**. Until that is granted
@@ -208,17 +208,22 @@ npm run dist:win           # Windows: NSIS installer
 npm run dist:mac           # macOS: .dmg and .zip in .build/
 ```
 
+`npm run dist:mac` builds the Swift helper for **both** architectures, joins the
+two with `lipo` into one universal `popbar-ax`, packages an x64 and an arm64 app
+and merges them, so the shipped bundle has no Rosetta dependency: both the app
+and its helper run natively on either Mac.
+
 All artifacts land in `.build/` (not `dist`), which is git-ignored:
 
 | File | What it is |
 |---|---|
 | `.build/PopBar Setup <version>.exe` | Windows installer (x64, NSIS, one-click, per-user) |
-| `.build/PopBar-<version>-arm64.dmg` | macOS disk image (arm64) |
-| `.build/PopBar-<version>-arm64-mac.zip` | macOS app as a zip, for tools that prefer it |
-| `.build/mac-arm64/PopBar.app` | the raw macOS app |
+| `.build/PopBar-<version>-universal.dmg` | macOS disk image (Apple Silicon + Intel) |
+| `.build/PopBar-<version>-universal.zip` | macOS app as a zip, for tools that prefer it |
+| `.build/mac-universal/PopBar.app` | the raw macOS app |
 
 On the Releases page those two installers appear as `PopBar.Setup.<version>.exe`
-and `PopBar-<version>-arm64.dmg` — GitHub rewrites the spaces in a built file
+and `PopBar-<version>-universal.dmg` — GitHub rewrites the spaces in a built file
 name to dots. Every release lists the SHA-256 of each asset in its notes.
 
 The output folder is `.build`, not `dist`, so Spotlight and Launchpad only ever
@@ -260,7 +265,7 @@ npm version patch          # bump package.json + lockfile
 npm run dist:mac           # macOS artifacts
 npm run dist:win           # Windows artifact
 shasum -a 256 .build/*.exe .build/*.dmg
-gh release create v<version> ".build/PopBar Setup <version>.exe" ".build/PopBar-<version>-arm64.dmg" \
+gh release create v<version> ".build/PopBar Setup <version>.exe" ".build/PopBar-<version>-universal.dmg" \
   --title "PopBar <version>" --notes "…"
 ```
 
@@ -294,7 +299,7 @@ add the new one.
   background helper, so it is a standalone app.
 - Apps that do not expose their text through Accessibility (some Electron apps,
   password fields) show nothing, or the bar appears at the mouse.
-- The macOS download is `arm64` only; Intel Macs need an `x64` build of both the
-  app and the Swift helper.
+- The macOS download is universal, but it is not notarized, so Gatekeeper needs
+  a right-click → *Open* the first time on every Mac.
 - Neither installer is code-signed by a paid certificate (no Apple notarization,
   no Windows Authenticode), so both show the usual first-launch warning.

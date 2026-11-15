@@ -47,19 +47,24 @@
     </div>
     <p class="fineprint">Version <span data-version>1.0.6</span> · free · source on <a href="https://github.com/HybridRCG/PopBar" rel="noopener">GitHub</a></p>
 
-    <div class="demo" aria-hidden="true">
+    <div class="demo">
       <div class="demo-text">
         <span class="sel">PopBar turns any selection</span> into a row of actions.
       </div>
-      <div class="demo-bar" role="toolbar" aria-label="Example PopBar toolbar">
-        <button title="Copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></button>
-        <button title="Search Web"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg></button>
-        <button title="Translate"><svg viewBox="0 0 24 24"><path d="M4 6h9M8 4v2c0 4-2 7-5 8"/><path d="M6 12c1 3 3 5 6 6"/><path d="m13 20 4-9 4 9M14.5 17h5"/></svg></button>
-        <button title="Speak"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l5 4V6L7 10H4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></button>
-        <span class="divider"></span>
-        <button title="UPPERCASE"><span class="glyph">AA</span></button>
-        <button title="Open Link"><svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></button>
-      </div>
+
+      <!-- Captured from the app's own bar window by `npm run screenshots`:
+           real markup, real stylesheet, real icons, rendered offscreen. -->
+      <figure class="shot">
+        <img src="assets/bar-light.png" width="628" height="76"
+             alt="The PopBar bar in light appearance: cut, copy, paste, search web, translate, speak, open link and UPPERCASE" />
+        <figcaption>light appearance</figcaption>
+      </figure>
+      <figure class="shot dark">
+        <img src="assets/bar-dark.png" width="628" height="76"
+             alt="The same PopBar bar in dark appearance" />
+        <figcaption>dark appearance</figcaption>
+      </figure>
+
       <p class="demo-label">the bar appears where the selection ended</p>
     </div>
   </section>

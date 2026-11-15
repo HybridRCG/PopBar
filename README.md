@@ -10,6 +10,19 @@ you add through extensions.
 selected text ──▶ selection helper (native, per OS) ──▶ PopBar bar ──▶ action
 ```
 
+![The PopBar bar next to a selected paragraph, light appearance](web/assets/bar-light.png)
+
+![The same bar in dark appearance](web/assets/bar-dark.png)
+
+Both pictures are rendered from the real bar — the same HTML, stylesheet and
+icon set the app uses, captured offscreen with `npm run screenshots` — so they
+cannot drift from what ships. They are always shown at 2× for a crisp line on a
+retina display.
+
+**[Download](https://github.com/HybridRCG/PopBar/releases/latest)** ·
+**[Project page](web/)** (deployed at `zaaz.co.za/popbar`) ·
+**[☕ Buy me a coffee](https://buymeacoffee.com/hybridrcg)**
+
 ## Install
 
 | | Download | Then |
@@ -280,6 +293,32 @@ Distributed builds are **not notarized** with an Apple Developer ID, so anyone
 downloading one has to right-click → *Open* the first time (or
 `xattr -cr /Applications/PopBar.app` once). Notarization is the only way to make
 that go away.
+
+## Support
+
+PopBar is free, and the source is here in full. If it earns its place in your
+day, there is a tip jar:
+
+**[☕ Buy me a coffee](https://buymeacoffee.com/hybridrcg)**
+
+That is a tip and nothing else: it buys no license, unlocks no feature, and it is
+not a substitute for the licence plans on the project page. Bug reports and
+ideas are worth just as much — [open an issue](https://github.com/HybridRCG/PopBar/issues).
+
+## Website
+
+The project page is the `web/` folder: one static `index.html`, one stylesheet,
+one script, no build step and no external fonts or trackers. Upload that folder
+to a `popbar` directory on a web host and it serves at `zaaz.co.za/popbar`, or
+preview it locally:
+
+```sh
+cd web && python3 -m http.server 8123
+```
+
+The download buttons ask the GitHub API for the newest release on page load and
+fall back to the releases page if that fails, so the page never offers a file
+name from an old version.
 
 ## Releasing
 

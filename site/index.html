@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>PopBar — instant actions for selected text</title>
+<meta name="description" content="Select text in any app and a small bar of actions appears next to it. Cut, copy, search, translate, speak, open links. macOS and Windows, one download each." />
+<meta property="og:title" content="PopBar — instant actions for selected text" />
+<meta property="og:description" content="A small toolbar that follows your selection, on macOS and Windows." />
+<meta property="og:type" content="website" />
+<link rel="icon" href="assets/icon.png" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="site">
+  <a class="brand" href="/">zaaz<span>.co.za</span></a>
+  <nav>
+    <a href="#download">Download</a>
+    <a href="#buy">Buy</a>
+    <a href="#faq">FAQ</a>
+    <a href="https://github.com/HybridRCG/PopBar" rel="noopener">GitHub</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero">
+    <p class="eyebrow">PopBar</p>
+    <h1>Select text. A bar appears.</h1>
+    <p class="lede">
+      A small toolbar that follows your selection in any app — cut, copy, search, translate,
+      speak, open the link, email a snippet, change the case. No menus, no keyboard gymnastics,
+      no leaving the window you are in.
+    </p>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-1.0.6-universal.dmg">
+        <span class="btn-label">Download for macOS</span>
+        <span class="btn-meta">12+ · Apple Silicon &amp; Intel · 232 MB</span>
+      </a>
+      <a class="btn" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-Setup-1.0.6.exe">
+        <span class="btn-label">Download for Windows</span>
+        <span class="btn-meta">10 / 11 · 64-bit · 115 MB</span>
+      </a>
+    </div>
+    <p class="fineprint">Version 1.0.6 · free · source on <a href="https://github.com/HybridRCG/PopBar" rel="noopener">GitHub</a></p>
+
+    <div class="demo" aria-hidden="true">
+      <div class="demo-text">
+        <span class="sel">PopBar turns any selection</span> into a row of actions.
+      </div>
+      <div class="demo-bar" role="toolbar" aria-label="Example PopBar toolbar">
+        <button title="Copy"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg></button>
+        <button title="Search Web"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6"/><path d="m16 16 4 4"/></svg></button>
+        <button title="Translate"><svg viewBox="0 0 24 24"><path d="M4 6h9M8 4v2c0 4-2 7-5 8"/><path d="M6 12c1 3 3 5 6 6"/><path d="m13 20 4-9 4 9M14.5 17h5"/></svg></button>
+        <button title="Speak"><svg viewBox="0 0 24 24"><path d="M4 10v4h3l5 4V6L7 10H4z"/><path d="M16 9a4 4 0 0 1 0 6"/></svg></button>
+        <span class="divider"></span>
+        <button title="UPPERCASE"><span class="glyph">AA</span></button>
+        <button title="Open Link"><svg viewBox="0 0 24 24"><path d="M14 4h6v6"/><path d="M20 4 11 13"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg></button>
+      </div>
+      <p class="demo-label">the bar appears where the selection ended</p>
+    </div>
+  </section>
+
+  <section class="features">
+    <article>
+      <h3>Works in whatever you are using</h3>
+      <p>Mail, Slack, a browser, Navicat, your editor. The bar is a panel, so clicking it never steals focus from the window you were in.</p>
+    </article>
+    <article>
+      <h3>A click is not a selection</h3>
+      <p>Clicking a table cell or a field that already had text selected does not summon the bar. Drag to select, or use the keyboard — those do.</p>
+    </article>
+    <article>
+      <h3>Never reads passwords</h3>
+      <p>Selections are ignored while secure input is active, and the clipboard is left exactly as it was. Copying a password yourself still works.</p>
+    </article>
+    <article>
+      <h3>31 extensions, built in</h3>
+      <p>DuckDuckGo, Wikipedia, GitHub, Maps, short links, title case, sort lines, Base64, word count, format JSON — plus any PopClip shell extension you import.</p>
+    </article>
+    <article>
+      <h3>History of what you copied</h3>
+      <p>The last 100 things PopBar put on the clipboard, one click away. Identical copies collapse into one.</p>
+    </article>
+    <article>
+      <h3>Yours to shape</h3>
+      <p>Bar height, labels on hover, dividers, action order, which actions exist, which apps it never appears in.</p>
+    </article>
+  </section>
+
+  <section id="download" class="download">
+    <h2>Download</h2>
+    <div class="cards">
+      <div class="card">
+        <h3>macOS</h3>
+        <p class="req">macOS 12 or later · Apple Silicon and Intel (one universal app)</p>
+        <a class="btn primary" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-1.0.6-universal.dmg">PopBar-1.0.6-universal.dmg</a>
+        <p class="fineprint">Open the disk image, drag PopBar to Applications. First launch: right-click → <em>Open</em> (the build is not notarized), then allow <strong>Accessibility</strong> so it can see selections.</p>
+        <p class="fineprint">SHA-256<br /><code>e01d096ec2f4b1cf2091a1ed0a41ba11c20a59a65d76ccadd58d466c4f9a7ecc</code></p>
+      </div>
+      <div class="card">
+        <h3>Windows</h3>
+        <p class="req">Windows 10 or 11 · 64-bit</p>
+        <a class="btn" href="https://github.com/HybridRCG/PopBar/releases/latest/download/PopBar-Setup-1.0.6.exe">PopBar-Setup-1.0.6.exe</a>
+        <p class="fineprint">Run the installer. SmartScreen warns once because the build is not code-signed: <em>More info → Run anyway</em>. No permission prompt after that.</p>
+        <p class="fineprint">SHA-256<br /><code>8bd338967b379fbbab0aa923d9c2a6ea13adbc588a2a4e8de8ab9228dba5d88f</code></p>
+      </div>
+    </div>
+  </section>
+
+  <section id="buy" class="buy">
+    <h2>Buy</h2>
+    <p class="lede">PopBar is a one-time purchase, not a subscription. The download above is the full app, with every feature.</p>
+
+    <div class="cards">
+      <div class="card">
+        <h3>Personal license</h3>
+        <p class="price">Coming soon</p>
+        <ul class="ticks">
+          <li>One payment, no subscription</li>
+          <li>Use on up to 5 of your own machines</li>
+          <li>Updates included for two years</li>
+          <li>Keep the last version you receive</li>
+        </ul>
+        <a class="btn" href="mailto:hello@zaaz.co.za?subject=PopBar%20personal%20license">Ask to be told when it opens</a>
+      </div>
+      <div class="card">
+        <h3>Team / volume</h3>
+        <p class="price">By arrangement</p>
+        <ul class="ticks">
+          <li>Multi-seat licensing at a discount</li>
+          <li>Invoice and purchase order</li>
+          <li>Deployment help for a fleet of Macs or PCs</li>
+        </ul>
+        <a class="btn" href="mailto:hello@zaaz.co.za?subject=PopBar%20team%20license">Email for a quote</a>
+      </div>
+    </div>
+
+    <p class="fineprint">
+      Checkout is not connected yet — the free download is the whole app, so you are not missing
+      anything while that is being set up. If you would rather pay now, email and you will get a
+      license by return.
+    </p>
+  </section>
+
+  <section class="how">
+    <h2>How it works</h2>
+    <ol class="steps">
+      <li><strong>A helper watches the selection.</strong> A small native program reads the focused element through the system's accessibility API and reports what is selected, and where.</li>
+      <li><strong>The app draws the bar.</strong> A non-activating panel appears below the selection, sized to your settings.</li>
+      <li><strong>An action runs.</strong> Click one and PopBar does the thing: puts text on the clipboard, opens a URL, or types the keystroke back into the app you came from.</li>
+    </ol>
+  </section>
+
+  <section id="faq" class="faq">
+    <h2>Questions</h2>
+
+    <details>
+      <summary>macOS says the app is from an unidentified developer.</summary>
+      <p>It is not notarized with an Apple Developer ID yet. Right-click the app → <em>Open</em> once, or run <code>xattr -cr /Applications/PopBar.app</code>. After that it launches normally.</p>
+    </details>
+
+    <details>
+      <summary>Why does it need Accessibility permission?</summary>
+      <p>That is the only way macOS lets a program read what another app has selected. PopBar asks for nothing else — no screen recording, no full disk access, no network access beyond update checks.</p>
+    </details>
+
+    <details>
+      <summary>Can it read my passwords?</summary>
+      <p>No. While secure input is active the helper reports nothing at all, and the clipboard fallback is skipped. Your own copy and paste in a password field are untouched.</p>
+    </details>
+
+    <details>
+      <summary>Do extensions work on Windows?</summary>
+      <p>Not yet — extensions are shell scripts, so they are hidden on Windows rather than offered and failing. The built-in actions all work there.</p>
+    </details>
+
+    <details>
+      <summary>How do updates work?</summary>
+      <p>PopBar checks the GitHub releases shortly after launch. On Windows it downloads and installs in place; on macOS an unsigned build cannot replace itself, so it tells you a new version exists and opens this page.</p>
+    </details>
+
+    <details>
+      <summary>Where is my data?</summary>
+      <p>In one folder on your machine (<code>~/Library/Application Support/PopBar</code>, or <code>%APPDATA%\PopBar</code>), readable only by you. Nothing is uploaded anywhere.</p>
+    </details>
+  </section>
+
+</main>
+
+<footer class="site">
+  <p>
+    <strong>PopBar</strong> by <a href="https://zaaz.co.za">ZAAZ</a> ·
+    <a href="https://github.com/HybridRCG/PopBar" rel="noopener">source</a> ·
+    <a href="https://github.com/HybridRCG/PopBar/releases" rel="noopener">all releases</a> ·
+    <a href="mailto:hello@zaaz.co.za">hello@zaaz.co.za</a>
+  </p>
+  <p class="fineprint">© 2026 Groblers CSS. PopBar is not affiliated with PopClip.</p>
+</footer>
+
+</body>
+</html>

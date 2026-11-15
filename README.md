@@ -217,6 +217,10 @@ All artifacts land in `.build/` (not `dist`), which is git-ignored:
 | `.build/PopBar-<version>-arm64-mac.zip` | macOS app as a zip, for tools that prefer it |
 | `.build/mac-arm64/PopBar.app` | the raw macOS app |
 
+On the Releases page those two installers appear as `PopBar.Setup.<version>.exe`
+and `PopBar-<version>-arm64.dmg` — GitHub rewrites the spaces in a built file
+name to dots. Every release lists the SHA-256 of each asset in its notes.
+
 The output folder is `.build`, not `dist`, so Spotlight and Launchpad only ever
 show the one installed copy — two bundles with the same name are confusing to
 pick from and each needs its own Accessibility permission.

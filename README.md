@@ -1,68 +1,33 @@
 # PopBar
 
-Instant text actions for macOS, in the spirit of PopClip: **select text in any
-app and a small toolbar appears next to it**, ready with the actions you use
-most — cut, copy, paste, web search, translate, speak, open the link, email a
-snippet, drop it in a new note, change the case, and whatever else you add
-through extensions.
+Instant text actions, in the spirit of PopClip, for **macOS and Windows**:
+**select text in any app and a small toolbar appears next to it**, ready with the
+actions you use most — cut, copy, paste, web search, translate, speak, open the
+link, email a snippet, drop it in a new note, change the case, and whatever else
+you add through extensions.
 
 ```
-selected text ──▶ Accessibility (native helper) ──▶ PopBar bar ──▶ action
+selected text ──▶ selection helper (native, per OS) ──▶ PopBar bar ──▶ action
 ```
 
-## Running it
+## Install
 
-```sh
-cd PopBar
-npm install      # also compiles the Accessibility helper (needs Xcode CLT)
-npm start
-```
+| | Download | Then |
+|---|---|---|
+| **Windows 10/11, 64-bit** | `PopBar-Setup-<version>.exe` | Run it. SmartScreen warns once because the build is not code-signed: *More info → Run anyway*. |
+| **macOS 12+, Apple Silicon** | `PopBar-<version>-arm64.dmg` | Open it, drag PopBar to Applications. The build is not notarized: right-click → *Open* the first time. |
 
-The app lives in the menu bar (the selection-marquee icon) — there is no Dock
-icon. The first time it starts, macOS asks for **Accessibility** permission:
-System Settings → Privacy & Security → Accessibility → switch on **PopBar**
-(when running from source the entry is called **Electron**). Until that is
-granted the bar cannot see selections; the settings window says so.
+Both are attached to the [Releases](../../releases) page. The macOS build is
+`arm64` only; Intel Macs need a separate build (see *Building* below).
 
-Settings live under the menu-bar icon → *PopBar Settings…* (⌘,).
+On first launch macOS asks for **Accessibility** permission: System Settings →
+Privacy & Security → Accessibility → switch on **PopBar**. Until that is granted
+the bar cannot see selections; the settings window says so. Windows needs no
+permission.
 
-### Checking it without touching another app
-
-```sh
-POPBAR_DEBUG=1 npm start                 # show the bar for a made-up selection at the pointer
-POPBAR_DEBUG=1 POPBAR_DEBUG_CLICK=1 npm start   # …and click Copy, printing the clipboard
-POPBAR_DEBUG_SETTINGS=1 npm start        # open Settings and print what it rendered
-```
-
-`POPBAR_AX_DEBUG=1 native/bin/popbar-ax` prints what the helper sees in the
-frontmost app, which is the quickest way to find out why an app does not
-produce a bar.
-
-### Building the app
-
-```sh
-npm run dist      # → .build/mac-arm64/PopBar.app
-ditto .build/mac-arm64/PopBar.app ~/Applications/PopBar.app   # or copy it wherever you like
-```
-
-The output folder is `.build`, not `dist`, so Spotlight and Launchpad only ever
-show the one installed copy — two bundles with the same name are confusing to
-pick from and each needs its own Accessibility permission.
-
-`PopBar.app` is menu-bar only (`LSUIElement`), has no Dock icon, and carries
-its own copy of the Accessibility helper — no `npm start`, Node or project
-folder needed to run it. The build is not signed with an Apple Developer ID,
-so electron-builder leaves it unsigned and macOS refuses to launch arm64 apps
-that way: sign it ad-hoc after building, then copy it.
-
-```sh
-codesign --force --deep --sign - dist/mac-arm64/PopBar.app
-```
-
-If a copy downloaded from elsewhere is "damaged", clear the quarantine flag
-once: `xattr -cr ~/Applications/PopBar.app`. On first launch macOS asks for
-Accessibility access again, because the permission belongs to the app bundle,
-not to the folder it was built in.
+The app lives in the menu bar / notification area (the selection-marquee icon) —
+there is no Dock or taskbar icon. Settings live under that icon →
+*PopBar Settings…* (⌘, on macOS).
 
 ## What is in the bar
 
@@ -71,13 +36,23 @@ not to the folder it was built in.
 | Cut / Copy / Paste / Select All | The usual, without leaving the app you are in |
 | Search Web | Opens the selection in Google |
 | Translate | Opens the selection in Google Translate |
-| Speak | Reads the selection with `say` |
+| Speak | Reads the selection — `say` on macOS, SAPI on Windows |
 | Open Link | Only shown when the selection is a URL — opens it |
 | Email | New message with the text as the body |
-| New Note | New Apple Notes note containing the text |
+| New Note | New Apple Notes note containing the text (macOS only) |
 | UPPERCASE / lowercase / Capitalize | Puts the converted text on the clipboard |
 
 Each one can be switched off in Settings; hover a button to see its name.
+
+## How it decides to appear
+
+A drag-selection shows the bar. A **click** does not, even when the app leaves
+text selected behind it (a table cell, a field that already had its text
+selected, a triple-click). The helper sees the mouse itself, so it knows the
+difference: a press that lets go without moving is a click, and a selection that
+appears within two seconds of one is ignored — unless a key was pressed after
+the click, because a keyboard selection is always the user's own. Selections are
+never read from password fields; the clipboard is untouched in secure input.
 
 ## Extension library
 
@@ -91,7 +66,11 @@ Format JSON and Strip Formatting.
 
 Tick one to install and switch it on, untick to switch it off, ✕ to remove it
 from disk. Each one is written as an ordinary extension folder you can edit in
-`~/Library/Application Support/PopBar/Extensions/`.
+the PopBar data folder.
+
+**Extensions are shell scripts and run on macOS only.** On Windows they are not
+loaded at all (logged once as `extensions-skipped`) rather than appearing as
+buttons that fail when clicked.
 
 ### Importing a PopClip extension
 
@@ -103,35 +82,10 @@ scripts. `requirements: [url]` becomes `"when": "url"`, `after: copy-result`
 becomes `"after": "copy"`, and icons are mapped to the built-in set (or become
 the extension's initials).
 
-## History
-
-Everything PopBar puts on the clipboard — Copy, Cut, Paste, the case actions,
-extension results — is listed under the menu-bar icon → **History** (newest
-first, 15 shown, 100 kept). Clicking an entry puts it back on the clipboard.
-"Clear History" empties the list. It lives in
-`~/Library/Application Support/PopBar/history.json`, capped at 100 entries and
-20 000 characters each; identical consecutive copies collapse into one.
-
-## Settings
-
-- **Appearance** — bar height (26–80 px) with a live preview, labels either on
-  hover above the icons or permanently under them, and dividers between icons
-  (off, extra space, or a hairline). The preview is drawn from the bar's own
-  stylesheet (`src/bar/appearance.css`) and icon set (`src/bar/icons.js`), so it
-  cannot drift from the real bar. A bar that is already on screen adopts the
-  new look immediately.
-- **Actions** — on/off for every built-in and extension action, and their order:
-  drag a row by its ⠿ handle, or use ↑ ↓.
-- **Extension library** — 31 ready-made actions to add, switch off or remove.
-- **Start at login** — adds PopBar to Login Items.
-- **Minimum characters** — ignore very short selections.
-- **Never appear in these apps** — name fragments, e.g. `1Password`.
-- **Extensions** — import a PopClip extension, open the folder, reload.
-
 ## Extensions
 
-An extension is a folder in `~/Library/Application Support/PopBar/Extensions/`
-with a `Config.json`:
+An extension is a folder in the PopBar data folder under `Extensions/` with a
+`Config.json`:
 
 ```json
 {
@@ -149,7 +103,8 @@ with a `Config.json`:
 }
 ```
 
-- `shell script` replaces PopClip's `shell script` key: it runs with `/bin/bash`.
+- `shell script` replaces PopClip's `shell script` key: it runs with `/bin/bash`
+  (macOS only).
 - Placeholders: `{popclip text}`, `{popclip text url-encoded}`, `{popclip app}`,
   `{popclip clipboard}` — shell-quoted for you. The same values arrive as
   `POPCLIP_TEXT`, `POPCLIP_URLENCODED_TEXT`, `POPCLIP_APP_NAME` and
@@ -165,68 +120,116 @@ with a `Config.json`:
 Two worked examples are in `examples/`; *Settings → Add Example Extensions*
 copies them into place.
 
+## History
+
+Everything PopBar puts on the clipboard — Copy, Cut, Paste, the case actions,
+extension results — is listed under the menu-bar icon → **History** (newest
+first, 15 shown, 100 kept). Clicking an entry puts it back on the clipboard.
+"Clear History" empties the list. Identical consecutive copies collapse into
+one.
+
+## Settings
+
+- **Appearance** — bar height (26–80 px) with a live preview, labels either on
+  hover above the icons or permanently under them, and dividers between icons
+  (off, extra space, or a hairline). The preview is drawn from the bar's own
+  stylesheet (`src/bar/appearance.css`) and icon set (`src/bar/icons.js`), so it
+  cannot drift from the real bar. A bar that is already on screen adopts the
+  new look immediately.
+- **Actions** — on/off for every built-in and extension action, and their order:
+  drag a row by its ⠿ handle, or use ↑ ↓.
+- **Extension library** — 31 ready-made actions to add, switch off or remove.
+- **Start at login** — adds PopBar to Login Items.
+- **Minimum characters** — ignore very short selections.
+- **Never appear in these apps** — name fragments, e.g. `1Password`.
+- **Extensions** — import a PopClip extension, open the folder, reload.
+
 ## Files
 
-| | |
-|---|---|
-| Settings, extensions, log | `~/Library/Application Support/PopBar/` |
-| Native helper | `native/main.swift` → `native/bin/popbar-ax` |
+| | macOS | Windows |
+|---|---|---|
+| Settings, extensions, log | `~/Library/Application Support/PopBar/` | `%APPDATA%\PopBar\` |
+| Selection helper | `native/main.swift` → `native/bin/popbar-ax` | `native/windows/popbar-win.ps1` |
+
+Settings, history and the log are created `0600` and written atomically (temp
+file plus rename, with a `.bak` to recover a damaged `config.json`).
 
 ## How it works
 
-`native/main.swift` is a small Swift program that runs alongside the app. Every
-120 ms it asks the Accessibility API for the focused UI element of the
-frontmost app, reads `AXSelectedText` and the screen rectangle of the selection
-(`AXBoundsForRange`), and prints a JSON line to stdout when the selection
-changes. If an app does not publish selection bounds (web views, Electron
-apps) PopBar falls back to the mouse position.
+The helper is a small native program that runs alongside the app and reports
+selections as JSON lines on stdout. The Electron process turns each line into
+the bar window — a non-activating panel, so clicking a button never takes focus
+away from the app you were working in — and runs the chosen action. Actions
+that must type into the app (cut, paste, select all) go back through the helper,
+which re-activates the source app first and then posts the key event.
 
-The Electron process turns each line into the bar window — a non-activating
-panel, so clicking a button never takes focus away from the app you were
-working in — and runs the chosen action. Actions that must type into the app
-(cut, paste, select all) go back through the helper, which re-activates the
-source app first and then posts the key event.
+| | macOS | Windows |
+|---|---|---|
+| Helper | `native/main.swift`, built to `native/bin/popbar-ax` | `native/windows/popbar-win.ps1` |
+| Notices a drag | Accessibility event tap | low-level mouse hook (`WH_MOUSE_LL`) |
+| Reads the selection | Accessibility (`AXSelectedText`), every 120 ms | UI Automation `TextPattern`, then a Ctrl+C fallback |
+| Permission | Accessibility grant | none |
+| Password fields | `IsSecureEventInputEnabled()` | UI Automation `IsPassword` |
+| Keys (cut/paste/select all) | `CGEvent` | `keybd_event` |
 
-The helper is the only component that needs the Accessibility permission.
+The macOS helper is the only component that needs the Accessibility
+permission. The Windows helper needs no compiler or SDK: its small C# pieces are
+compiled at start-up with `Add-Type`, using the PowerShell that ships with
+Windows. Both speak the same protocol, so the app has a single code path.
 
-### When something does not work
+## Running from source
 
-`~/Library/Application Support/PopBar/popbar.log` records what the app actually
-did: `start`, `trust granted/missing`, every `selection`, `bar-shown`,
-`bar-click <action>`, `action-run`, extension output and errors. A bar that
-never appears is a `trust missing`; a click that never reaches the app leaves
-no `bar-click` line.
-
-**Every rebuild is a new app identity**, so macOS drops the Accessibility
-grant: after installing a new build, remove the old PopBar entry from
-System Settings → Privacy & Security → Accessibility and add the new one.
-Signing with a stable Developer ID (or a self-signed certificate) is the only
-way to avoid that.
-
-## Limits
-
-- macOS only; there is no Windows or iOS version (same as PopClip).
-- The Mac App Store is not an option for this design — it needs Accessibility
-  and a background helper, so this is a standalone app.
-- Apps that do not expose their text through Accessibility (some Electron
-  apps, password fields) show nothing, or the bar appears at the mouse.
-
-## Building
-
-```bash
-./scripts/build-app.sh
+```sh
+npm install      # also compiles the macOS helper (needs Xcode CLT)
+npm start
 ```
 
-This builds the app, signs it with the persistent self-signed identity
-"PopBar Self-Signed", and installs it to `/Applications`. Use it instead of
-ad-hoc signing.
+When running from source the Accessibility entry is called **Electron**, not
+PopBar.
 
-### Why a signing identity
+### Checking it without touching another app
+
+```sh
+POPBAR_DEBUG=1 npm start                        # show the bar for a made-up selection at the pointer
+POPBAR_DEBUG=1 POPBAR_DEBUG_CLICK=1 npm start   # …and click Copy, printing the clipboard
+POPBAR_DEBUG_SETTINGS=1 npm start               # open Settings and print what it rendered
+```
+
+`POPBAR_AX_DEBUG=1 native/bin/popbar-ax` prints what the helper sees in the
+frontmost app, which is the quickest way to find out why an app does not
+produce a bar.
+
+### Building the app
+
+```sh
+./scripts/build-app.sh     # macOS: builds, signs with the persistent identity, installs to /Applications
+npm run dist:win           # Windows: NSIS installer
+npm run dist:mac           # macOS: .dmg and .zip in .build/
+```
+
+All artifacts land in `.build/` (not `dist`), which is git-ignored:
+
+| File | What it is |
+|---|---|
+| `.build/PopBar Setup <version>.exe` | Windows installer (x64, NSIS, one-click, per-user) |
+| `.build/PopBar-<version>-arm64.dmg` | macOS disk image (arm64) |
+| `.build/PopBar-<version>-arm64-mac.zip` | macOS app as a zip, for tools that prefer it |
+| `.build/mac-arm64/PopBar.app` | the raw macOS app |
+
+The output folder is `.build`, not `dist`, so Spotlight and Launchpad only ever
+show the one installed copy — two bundles with the same name are confusing to
+pick from and each needs its own Accessibility permission.
+
+`PopBar.app` is menu-bar only (`LSUIElement`), has no Dock icon, and carries
+its own copy of the Accessibility helper — no `npm start`, Node or project
+folder needed to run it.
+
+### Why a signing identity (macOS)
 
 An ad-hoc signature (`codesign --sign -`) hashes the whole binary, so every
 rebuild looks like a different app to macOS and the Accessibility permission is
-discarded each time. Signing with a fixed certificate keeps the designated
-requirement constant:
+discarded each time. `./scripts/build-app.sh` signs with a fixed self-signed
+certificate instead, which keeps the designated requirement constant:
 
     identifier "com.popbar.app" and certificate root = H"dc15c7f3…"
 
@@ -240,32 +243,53 @@ Grant Accessibility once after the first signed build. Rebuilds do not need it
 again. If the identity is ever deleted, a new one is created and one re-grant is
 required.
 
-## Windows
+Distributed builds are **not notarized** with an Apple Developer ID, so anyone
+downloading one has to right-click → *Open* the first time (or
+`xattr -cr /Applications/PopBar.app` once). Notarization is the only way to make
+that go away.
 
-The app is Electron and runs on both platforms. Only the selection helper
-differs, because the two systems expose selections differently:
+## Releasing
 
-| | macOS | Windows |
-| --- | --- | --- |
-| Helper | `native/main.swift`, built to `native/bin/popbar-ax` | `native/windows/popbar-win.ps1` |
-| Notices a drag | Accessibility event tap | low-level mouse hook (`WH_MOUSE_LL`) |
-| Reads the selection | Accessibility (`AXSelectedText`) | UI Automation `TextPattern`, then a Ctrl+C fallback |
-| Permission | Accessibility grant | none |
-| Password fields | `IsSecureEventInputEnabled()` | UI Automation `IsPassword` |
-| Keys (cut/paste/select all) | `CGEvent` | `keybd_event` |
-
-```
-npm install
-npm start          # runs from source
-npm run dist:win   # NSIS installer in .build/
+```sh
+npm version patch          # bump package.json + lockfile
+npm run dist:mac           # macOS artifacts
+npm run dist:win           # Windows artifact
+shasum -a 256 .build/*.exe .build/*.dmg
+gh release create v<version> ".build/PopBar Setup <version>.exe" ".build/PopBar-<version>-arm64.dmg" \
+  --title "PopBar <version>" --notes "…"
 ```
 
-Windows needs no compiler or SDK: the helper's small C# pieces are compiled at
-start-up with `Add-Type`, using the PowerShell that ships with Windows. The
-helper speaks the same JSON-lines protocol as the macOS one, so the app has a
-single code path: heartbeats, clicks, selections and key requests.
+Both installers carry the version from `package.json`, so bump it before
+building or the artifacts and the app disagree.
 
-Extension actions are bash scripts, so they are not loaded on Windows (logged
-once as `extensions-skipped`) rather than appearing in the bar and failing on
-every click. Windows gets the built-in actions: Copy, Cut, Paste, Select All,
-Open Link, Search, Email, UPPERCASE/lowercase/Capitalize and Speak.
+## When something does not work
+
+The log records what the app actually did: `start`, `trust granted/missing`,
+every `selection`, `bar-shown`, `bar-click <action>`, `action-run`, extension
+output, helper crashes and errors.
+
+| | |
+|---|---|
+| macOS | `~/Library/Application Support/PopBar/popbar.log` |
+| Windows | `%APPDATA%\PopBar\popbar.log` |
+
+A bar that never appears is a `trust missing`; a click that never reaches the
+app leaves no `bar-click` line. *Menu → Diagnostics → Show Helper Error…* names
+the helper when it fails to start and backs off from 2 s to 60 s instead of
+looping.
+
+**Every rebuild is a new app identity** when signing is not in place, so macOS
+can drop the Accessibility grant: after installing an unsigned build, remove the
+old PopBar entry from System Settings → Privacy & Security → Accessibility and
+add the new one.
+
+## Limits
+
+- Not in the Mac App Store or the Microsoft Store: it needs Accessibility and a
+  background helper, so it is a standalone app.
+- Apps that do not expose their text through Accessibility (some Electron apps,
+  password fields) show nothing, or the bar appears at the mouse.
+- The macOS download is `arm64` only; Intel Macs need an `x64` build of both the
+  app and the Swift helper.
+- Neither installer is code-signed by a paid certificate (no Apple notarization,
+  no Windows Authenticode), so both show the usual first-launch warning.

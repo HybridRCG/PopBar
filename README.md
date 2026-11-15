@@ -14,10 +14,11 @@ selected text ──▶ selection helper (native, per OS) ──▶ PopBar bar �
 
 | | Download | Then |
 |---|---|---|
-| **Windows 10/11, 64-bit** | `PopBar-Setup-<version>.exe` | Run it. SmartScreen warns once because the build is not code-signed: *More info → Run anyway*. |
+| **Windows 10/11, 64-bit** | `PopBar.Setup.<version>.exe` | Run it. SmartScreen warns once because the build is not code-signed: *More info → Run anyway*. |
 | **macOS 12+, Apple Silicon** | `PopBar-<version>-arm64.dmg` | Open it, drag PopBar to Applications. The build is not notarized: right-click → *Open* the first time. |
 
-Both are attached to the [Releases](../../releases) page. The macOS build is
+Both are attached to the Releases page (GitHub rewrites the spaces in the
+Windows file name to dots). The macOS build is
 `arm64` only; Intel Macs need a separate build (see *Building* below).
 
 On first launch macOS asks for **Accessibility** permission: System Settings →

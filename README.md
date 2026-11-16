@@ -243,7 +243,7 @@ POPBAR_DEBUG_SETTINGS=1 npm start               # open Settings and print what i
 frontmost app, which is the quickest way to find out why an app does not
 produce a bar.
 
-### Building the app
+### Building the app (working copy only)
 
 ```sh
 ./scripts/build-app.sh     # macOS: builds, signs with the persistent identity, installs to /Applications
@@ -327,7 +327,7 @@ The download buttons ask the GitHub API for the newest release on page load and
 fall back to the releases page if that fails, so the page never offers a file
 name from an old version.
 
-## Releasing
+## Releasing (working copy only)
 
 ```sh
 npm version patch          # bump package.json + lockfile

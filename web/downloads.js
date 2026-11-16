@@ -1,10 +1,11 @@
 /* Fills the download buttons from the newest GitHub release, so the page never
    points at the installer of a version that has been superseded.
 
-   Every anchor carries data-download="mac" or "win"; the text it shows is
-   rewritten from the asset that was found. If the request fails (offline, rate
-   limited, no release yet) the buttons fall back to the releases page instead of
-   linking a file name that may not exist. */
+   Every anchor carries data-download="mac" or "win". The button text is fixed
+   — it never shows a version, so it cannot go stale — while the href always
+   points at the installer in the newest release. If the request fails (offline,
+   rate limited, no release yet) the buttons fall back to the releases page
+   instead of linking a file name that may not exist. */
 (() => {
   const REPO = 'HybridRCG/PopBar';
   const RELEASES = `https://github.com/${REPO}/releases/latest`;
@@ -15,22 +16,21 @@
     return `${Math.round(Number(bytes) / (1024 * 1024))} MB`;
   }
 
-  /** Rewrites one download button: its href, its label and its sub-label. */
+  /** Points one download button at the newest installer and fills its sub-label.
+      The label itself is left exactly as written in the HTML: no version. */
   function apply(kind, asset, release, meta) {
     for (const anchor of anchorsFor(kind)) {
-      const label = anchor.querySelector('[data-role="label"]');
       const sub = anchor.querySelector('[data-role="meta"]');
       if (asset) {
         anchor.href = asset.browser_download_url;
         anchor.removeAttribute('title');
-        // A card shows the file name; the hero shows what it is for.
-        if (label) label.textContent = label.dataset.card ? asset.name : label.dataset.hero || label.textContent;
         if (sub && asset.size) sub.textContent = meta(asset);
         anchor.dataset.file = asset.name;
       } else {
         anchor.href = RELEASES;
         anchor.title = 'No installer for this platform in the newest release';
-        if (label && label.dataset.card) label.textContent = 'See all releases';
+        const label = anchor.querySelector('[data-role="label"]');
+        if (label) label.textContent = 'See all releases';
         if (sub) sub.textContent = 'open the releases page';
       }
     }

@@ -2,43 +2,52 @@
    Every path is relative so the folder can live at zaaz.co.za/popbar. */
 
 :root {
-  --ink: #14151a;
-  --ink-soft: #5b5f6b;
-  --ink-faint: #8a8f9c;
-  --page: #ffffff;
-  --page-tint: #f6f7fa;
-  --line: #e4e6ec;
-  --line-strong: #d2d6df;
-  --accent: #2f5ee0;
-  --accent-ink: #ffffff;
-  --accent-soft: #eef2ff;
-  --bar: rgba(250, 250, 253, 0.97);
-  --bar-line: rgba(20, 22, 30, 0.12);
-  --bar-ink: #23262f;
-  --bar-hover: rgba(20, 22, 30, 0.07);
-  --sel: #cfe0ff;
+  /* Both themes are designed, not one with a filter over it: the light theme is
+     paper white with a deep blue accent, the dark theme is near-black with a
+     lighter accent and softer borders, so nothing glares or disappears. */
+  color-scheme: light dark;
+
   --radius: 14px;
+
+  --ink: #13151b;
+  --ink-soft: #565d6d;
+  --ink-faint: #6a7180;
+  --page: #ffffff;
+  --page-tint: #f5f7fb;
+  --raise: #ffffff;
+  --line: #e3e6ee;
+  --line-strong: #ccd2de;
+  --accent: #2a55d4;
+  --accent-ink: #ffffff;
+  --accent-soft: #eaf0ff;
+  --sel: #cfe0ff;
+  --glow: rgba(42, 85, 212, 0.06);
   --shadow: 0 1px 2px rgba(16, 18, 26, 0.06), 0 12px 32px rgba(16, 18, 26, 0.08);
+
+  /* The bar screenshots carry their own background, so each appearance needs its
+     own shadow: a dark bar on a white page needs more lift than a light one. */
+  --shot-light: drop-shadow(0 4px 10px rgba(16, 18, 26, 0.15));
+  --shot-dark: drop-shadow(0 6px 16px rgba(16, 18, 26, 0.3));
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --ink: #f2f3f7;
-    --ink-soft: #b6bbc7;
-    --ink-faint: #8e94a3;
-    --page: #0e0f13;
-    --page-tint: #16181e;
-    --line: #262a33;
-    --line-strong: #333845;
-    --accent: #7c9cff;
-    --accent-ink: #0d1220;
-    --accent-soft: #1b2233;
-    --bar: rgba(32, 34, 41, 0.97);
-    --bar-line: rgba(255, 255, 255, 0.14);
-    --bar-ink: #eceef4;
-    --bar-hover: rgba(255, 255, 255, 0.11);
-    --sel: #2f4a7a;
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 16px 40px rgba(0, 0, 0, 0.45);
+    --ink: #eef1f7;
+    --ink-soft: #b2b9c7;
+    --ink-faint: #9aa1b0;
+    --page: #0d0f14;
+    --page-tint: #151922;
+    --raise: #13171f;
+    --line: #252a35;
+    --line-strong: #343b49;
+    --accent: #8aa6ff;
+    --accent-ink: #0a0f1e;
+    --accent-soft: #1a2133;
+    --sel: #33497a;
+    --glow: rgba(138, 166, 255, 0.08);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 16px 40px rgba(0, 0, 0, 0.5);
+    --shot-light: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+    --shot-dark: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
   }
 }
 
@@ -48,7 +57,11 @@ html { scroll-behavior: smooth; }
 
 body {
   margin: 0;
-  background: var(--page);
+  /* Kept as separate longhands: a colour cannot be one layer of a multi-layer
+     `background` shorthand, and the whole declaration would be dropped. */
+  background-color: var(--page);
+  background-image: radial-gradient(90% 60% at 50% -10%, var(--glow), transparent 70%);
+  background-repeat: no-repeat;
   color: var(--ink);
   font: 16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -56,6 +69,12 @@ body {
 
 a { color: var(--accent); text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+a:focus-visible, .btn:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
 
 h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0 0 0.5em; }
 h1 { font-size: clamp(2.1rem, 5vw, 3.4rem); font-weight: 680; }
@@ -124,7 +143,7 @@ section { padding: 56px 0; border-top: 1px solid var(--line); }
   padding: 12px 20px;
   border-radius: 11px;
   border: 1px solid var(--line-strong);
-  background: var(--page);
+  background: var(--raise);
   color: var(--ink);
   font-weight: 600;
   text-decoration: none;
@@ -184,7 +203,7 @@ section { padding: 56px 0; border-top: 1px solid var(--line); }
   display: block;
   width: 100%;
   height: auto;
-  filter: drop-shadow(0 6px 14px rgba(16, 18, 26, 0.12));
+  filter: var(--shot-light);
 }
 .shot figcaption {
   margin-top: 8px;
@@ -192,7 +211,7 @@ section { padding: 56px 0; border-top: 1px solid var(--line); }
   letter-spacing: 0.02em;
   color: var(--ink-faint);
 }
-.shot.dark img { filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.35)); }
+.shot.dark img { filter: var(--shot-dark); }
 
 .demo-label {
   margin: 18px 0 0;
@@ -225,7 +244,7 @@ section { padding: 56px 0; border-top: 1px solid var(--line); }
   border: 1px solid var(--line);
   border-radius: var(--radius);
   padding: 22px;
-  background: var(--page);
+  background: var(--raise);
   display: flex;
   flex-direction: column;
   gap: 12px;

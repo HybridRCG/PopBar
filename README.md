@@ -14,9 +14,9 @@ selected text ──▶ selection helper (native, per OS) ──▶ PopBar bar �
 
 ![The same bar in dark appearance](web/assets/bar-dark.png)
 
-Both pictures are rendered from the real bar — the same HTML, stylesheet and
-icon set the app uses, captured offscreen with `npm run screenshots` — so they
-cannot drift from what ships. They are always shown at 2× for a crisp line on a
+Both pictures are rendered from the app's own bar window — the same markup,
+stylesheet and icon set it uses, captured offscreen rather than drawn by hand —
+so they cannot drift from what ships. They are always shown at 2× for a crisp line on a
 retina display.
 
 **[Download](https://github.com/HybridRCG/PopBar/releases/latest)** ·
@@ -154,8 +154,8 @@ An extension is a folder in the PopBar data folder under `Extensions/` with a
   two characters, e.g. `"🔎"` or `"W"`.
 - Several actions in one `Config.json` give one extension several buttons.
 
-Two worked examples are in `examples/`; *Settings → Add Example Extensions*
-copies them into place.
+Two worked examples ship inside the app; *Settings → Add Example Extensions*
+copies them into your extensions folder.
 
 ## History
 
@@ -185,7 +185,7 @@ one.
 | | macOS | Windows |
 |---|---|---|
 | Settings, extensions, log | `~/Library/Application Support/PopBar/` | `%APPDATA%\PopBar\` |
-| Selection helper | `native/main.swift` → `native/bin/popbar-ax` | `native/windows/popbar-win.ps1` |
+| Selection helper | the bundled `popbar-ax` helper | the bundled PowerShell helper |
 
 Settings, history and the log are created `0600` and written atomically (temp
 file plus rename, with a `.bak` to recover a damaged `config.json`).
@@ -201,7 +201,7 @@ which re-activates the source app first and then posts the key event.
 
 | | macOS | Windows |
 |---|---|---|
-| Helper | `native/main.swift`, built to `native/bin/popbar-ax` | `native/windows/popbar-win.ps1` |
+| Helper | a small native program, `popbar-ax` | a PowerShell script |
 | Notices a drag | Accessibility event tap | low-level mouse hook (`WH_MOUSE_LL`) |
 | Reads the selection | Accessibility (`AXSelectedText`), every 120 ms | UI Automation `TextPattern`, then a Ctrl+C fallback |
 | Permission | Accessibility grant | none |
@@ -215,9 +215,13 @@ Windows. Both speak the same protocol, so the app has a single code path.
 
 ## Running from source
 
-The application source is **not published** in this repository: it holds the
-released builds, the update manifests and the project page. These notes are for
-a working copy of the app.
+The application source is **not published** in this repository, and neither is
+anything that builds it. What is here: this README, the project page in `web/`,
+and the release downloads and update manifests attached to the releases. The
+app source (`src/`), the native selection helpers (`native/`), the build and
+release scripts (`scripts/`), the example extensions (`examples/`), the tray and
+installer artwork (`build/`) and `package.json` are all outside the repository.
+These notes are for a working copy of the app.
 
 ```sh
 npm install      # also compiles the macOS helper (needs Xcode CLT)

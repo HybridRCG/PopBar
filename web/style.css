@@ -4,52 +4,42 @@
 :root {
   /* Both themes are designed, not one with a filter over it: the light theme is
      paper white with a deep blue accent, the dark theme is near-black with a
-     lighter accent and softer borders, so nothing glares or disappears. */
+     lighter accent and softer borders, so nothing glares or disappears.
+
+     Each token carries both values in one `light-dark()` call, so there is no
+     copy of the palette to keep in sync with a media query. Which side wins is
+     decided by `color-scheme`, which an explicit choice overrides below. */
   color-scheme: light dark;
 
   --radius: 14px;
 
-  --ink: #13151b;
-  --ink-soft: #565d6d;
-  --ink-faint: #6a7180;
-  --page: #ffffff;
-  --page-tint: #f5f7fb;
-  --raise: #ffffff;
-  --line: #e3e6ee;
-  --line-strong: #ccd2de;
-  --accent: #2a55d4;
-  --accent-ink: #ffffff;
-  --accent-soft: #eaf0ff;
-  --sel: #cfe0ff;
-  --glow: rgba(42, 85, 212, 0.06);
-  --shadow: 0 1px 2px rgba(16, 18, 26, 0.06), 0 12px 32px rgba(16, 18, 26, 0.08);
+  --ink: light-dark(#13151b, #eef1f7);
+  --ink-soft: light-dark(#565d6d, #b2b9c7);
+  --ink-faint: light-dark(#6a7180, #9aa1b0);
+  --page: light-dark(#ffffff, #0d0f14);
+  --page-tint: light-dark(#f5f7fb, #151922);
+  --raise: light-dark(#ffffff, #13171f);
+  --line: light-dark(#e3e6ee, #252a35);
+  --line-strong: light-dark(#ccd2de, #343b49);
+  --accent: light-dark(#2a55d4, #8aa6ff);
+  --accent-ink: light-dark(#ffffff, #0a0f1e);
+  --accent-soft: light-dark(#eaf0ff, #1a2133);
+  --sel: light-dark(#cfe0ff, #33497a);
+  --glow: light-dark(rgba(42, 85, 212, 0.06), rgba(138, 166, 255, 0.08));
+  --shadow:
+    0 1px 2px light-dark(rgba(16, 18, 26, 0.06), rgba(0, 0, 0, 0.45)),
+    0 12px 32px light-dark(rgba(16, 18, 26, 0.08), rgba(0, 0, 0, 0.5));
 
   /* The bar screenshots carry their own background, so each appearance needs its
      own shadow: a dark bar on a white page needs more lift than a light one. */
-  --shot-light: drop-shadow(0 4px 10px rgba(16, 18, 26, 0.15));
-  --shot-dark: drop-shadow(0 6px 16px rgba(16, 18, 26, 0.3));
+  --shot-light: drop-shadow(0 4px 10px light-dark(rgba(16, 18, 26, 0.15), rgba(0, 0, 0, 0.5)));
+  --shot-dark: drop-shadow(0 6px 16px light-dark(rgba(16, 18, 26, 0.3), rgba(0, 0, 0, 0.4)));
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #eef1f7;
-    --ink-soft: #b2b9c7;
-    --ink-faint: #9aa1b0;
-    --page: #0d0f14;
-    --page-tint: #151922;
-    --raise: #13171f;
-    --line: #252a35;
-    --line-strong: #343b49;
-    --accent: #8aa6ff;
-    --accent-ink: #0a0f1e;
-    --accent-soft: #1a2133;
-    --sel: #33497a;
-    --glow: rgba(138, 166, 255, 0.08);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 16px 40px rgba(0, 0, 0, 0.5);
-    --shot-light: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
-    --shot-dark: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.4));
-  }
-}
+/* A chosen theme wins over the OS; with no choice, `color-scheme: light dark`
+   above follows the OS by itself, before any script runs. */
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }
 
 * { box-sizing: border-box; }
 
@@ -112,9 +102,36 @@ header.site { border-bottom: 1px solid transparent; }
 }
 .brand span { color: var(--ink-faint); font-weight: 500; }
 
-header.site nav { display: flex; gap: 20px; font-size: 0.92rem; }
+header.site nav { display: flex; align-items: center; gap: 20px; font-size: 0.92rem; }
 header.site nav a { color: var(--ink-soft); }
 header.site nav a:hover { color: var(--ink); text-decoration: none; }
+
+/* The light/dark switch: small, quiet, and the only button in the header. */
+.theme-toggle {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  background: var(--raise);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--ink); border-color: var(--ink-faint); }
+.theme-toggle svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.theme-toggle .icon-sun { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+:root[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
 
 /* ------------------------------------------------------------------ main */
 
@@ -159,10 +176,7 @@ section { padding: 56px 0; border-top: 1px solid var(--line); }
   border-color: transparent;
   color: var(--accent-ink);
 }
-.btn.primary .btn-meta { color: rgba(255, 255, 255, 0.82); }
-@media (prefers-color-scheme: dark) {
-  .btn.primary .btn-meta { color: rgba(13, 18, 32, 0.72); }
-}
+.btn.primary .btn-meta { color: light-dark(rgba(255, 255, 255, 0.82), rgba(10, 15, 30, 0.72)); }
 
 .fineprint { font-size: 0.82rem; color: var(--ink-faint); max-width: 68ch; }
 .fineprint code { font-size: 0.74rem; }

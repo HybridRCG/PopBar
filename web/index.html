@@ -69,7 +69,9 @@
 <meta property="og:description" content="A small toolbar that follows your selection, on macOS and Windows." />
 <meta property="og:type" content="website" />
 <link rel="icon" href="assets/icon.png" />
-<link rel="stylesheet" href="style.css" />
+<!-- The ?v= token busts the browser cache when style.css or downloads.js
+     changes: bump it in both places on the same push that changes either file. -->
+<link rel="stylesheet" href="style.css?v=20261116b" />
 </head>
 <body>
 
@@ -288,7 +290,7 @@
   <p class="fineprint">© 2026 Groblers CSS. PopBar is not affiliated with PopClip. Tips are a thank-you, not a license purchase.</p>
 </footer>
 
-<script src="downloads.js" defer></script>
+<script src="downloads.js?v=20261116b" defer></script>
 
 </body>
 </html>

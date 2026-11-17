@@ -68,12 +68,18 @@
 <meta property="og:title" content="PopBar — instant actions for selected text" />
 <meta property="og:description" content="A small toolbar that follows your selection, on macOS and Windows." />
 <meta property="og:type" content="website" />
-<link rel="icon" href="assets/icon.png?v=20261116b" />
+<meta property="og:url" content="https://zaaz.co.za/popbar/" />
+<meta property="og:image" content="https://zaaz.co.za/popbar/assets/card.png?v=20261117a" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="The PopBar bar in light and dark appearance" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" href="assets/icon.png?v=20261117a" />
 <!-- The ?v= token busts the browser and CDN cache. Every local file this page
      links carries it: the stylesheet, the script and the three images in
      assets/. Bump the token on all five references whenever any one of those
      files changes, or visitors keep the old copy. -->
-<link rel="stylesheet" href="style.css?v=20261116b" />
+<link rel="stylesheet" href="style.css?v=20261117a" />
 </head>
 <body>
 
@@ -81,7 +87,7 @@
   <a class="brand" href="/">zaaz<span>.co.za</span></a>
   <nav>
     <a href="#download">Download</a>
-    <a href="#buy">Buy</a>
+    <a href="#support">Support</a>
     <a href="#faq">FAQ</a>
     <a href="https://github.com/HybridRCG/PopBar" rel="noopener">GitHub</a>
     <button id="theme-toggle" class="theme-toggle" type="button" aria-pressed="false"
@@ -124,12 +130,12 @@
       <!-- Captured from the app's own bar window by `npm run screenshots`:
            real markup, real stylesheet, real icons, rendered offscreen. -->
       <figure class="shot">
-        <img src="assets/bar-light.png?v=20261116b" width="628" height="76"
+        <img src="assets/bar-light.png?v=20261117a" width="628" height="76"
              alt="The PopBar bar in light appearance: cut, copy, paste, search web, translate, speak, open link and UPPERCASE" />
         <figcaption>light appearance</figcaption>
       </figure>
       <figure class="shot dark">
-        <img src="assets/bar-dark.png?v=20261116b" width="628" height="76"
+        <img src="assets/bar-dark.png?v=20261117a" width="628" height="76"
              alt="The same PopBar bar in dark appearance" />
         <figcaption>dark appearance</figcaption>
       </figure>
@@ -175,7 +181,7 @@
           <span data-role="label">Download .dmg</span>
         </a>
         <p class="fineprint">Open the disk image, drag PopBar to Applications. First launch: right-click → <em>Open</em> (the build is not notarized), then allow <strong>Accessibility</strong> so it can see selections.</p>
-        <p class="fineprint">SHA-256 for every file is printed in the <a data-release-link href="https://github.com/HybridRCG/PopBar/releases/latest" rel="noopener">release notes</a>.</p>
+        <p class="fineprint">SHA-256 <code data-sha="mac">from the release</code></p>
       </div>
       <div class="card">
         <h3>Windows</h3>
@@ -184,43 +190,41 @@
           <span data-role="label">Download .exe</span>
         </a>
         <p class="fineprint">Run the installer. SmartScreen warns once because the build is not code-signed: <em>More info → Run anyway</em>. No permission prompt after that.</p>
-        <p class="fineprint">SHA-256 for every file is printed in the <a data-release-link href="https://github.com/HybridRCG/PopBar/releases/latest" rel="noopener">release notes</a>.</p>
+        <p class="fineprint">SHA-256 <code data-sha="win">from the release</code></p>
       </div>
     </div>
   </section>
 
-  <section id="buy" class="buy">
-    <h2>Buy</h2>
-    <p class="lede">PopBar is a one-time purchase, not a subscription. The download above is the full app, with every feature.</p>
+  <section id="support" class="buy">
+    <h2>Support</h2>
+    <p class="lede">PopBar is free, and the download above is the whole app: every action, every extension, no key, no account, no upgrade tier.</p>
 
     <div class="cards">
       <div class="card">
-        <h3>Personal license</h3>
-        <p class="price">Coming soon</p>
+        <h3>Buy me a coffee</h3>
+        <p class="price">Any amount</p>
         <ul class="ticks">
-          <li>One payment, no subscription</li>
-          <li>Use on up to 5 of your own machines</li>
-          <li>Updates included for two years</li>
-          <li>Keep the last version you receive</li>
+          <li>Goes towards the next release</li>
+          <li>No key and nothing unlocked</li>
+          <li>Not a licence — there is nothing to license</li>
         </ul>
-        <a class="btn" href="mailto:hello@zaaz.co.za?subject=PopBar%20personal%20license">Ask to be told when it opens</a>
+        <a class="btn primary" href="https://buymeacoffee.com/hybridrcg" rel="noopener">☕ Buy me a coffee</a>
       </div>
       <div class="card">
-        <h3>Team / volume</h3>
-        <p class="price">By arrangement</p>
+        <h3>Using it at work</h3>
+        <p class="price">No fee</p>
         <ul class="ticks">
-          <li>Multi-seat licensing at a discount</li>
-          <li>Invoice and purchase order</li>
-          <li>Deployment help for a fleet of Macs or PCs</li>
+          <li>Any number of your own machines</li>
+          <li>No seat counting, no invoice</li>
+          <li>Email if IT needs something in writing</li>
         </ul>
-        <a class="btn" href="mailto:hello@zaaz.co.za?subject=PopBar%20team%20license">Email for a quote</a>
+        <a class="btn" href="mailto:hello@zaaz.co.za?subject=PopBar%20deployment">Email about deployment</a>
       </div>
     </div>
 
     <p class="fineprint">
-      Checkout is not connected yet — the free download is the whole app, so you are not missing
-      anything while that is being set up. If you would rather buy a license now, email and you
-      will get one by return.
+      There is no paid edition and none planned. If that ever changes, this page will say so
+      before anything you already have stops working.
     </p>
 
     <div class="support">
@@ -292,7 +296,7 @@
   <p class="fineprint">© 2026 Groblers CSS. PopBar is not affiliated with PopClip. Tips are a thank-you, not a license purchase.</p>
 </footer>
 
-<script src="downloads.js?v=20261116b" defer></script>
+<script src="downloads.js?v=20261117a" defer></script>
 
 </body>
 </html>

@@ -68,9 +68,11 @@
 <meta property="og:title" content="PopBar — instant actions for selected text" />
 <meta property="og:description" content="A small toolbar that follows your selection, on macOS and Windows." />
 <meta property="og:type" content="website" />
-<link rel="icon" href="assets/icon.png" />
-<!-- The ?v= token busts the browser cache when style.css or downloads.js
-     changes: bump it in both places on the same push that changes either file. -->
+<link rel="icon" href="assets/icon.png?v=20261116b" />
+<!-- The ?v= token busts the browser and CDN cache. Every local file this page
+     links carries it: the stylesheet, the script and the three images in
+     assets/. Bump the token on all five references whenever any one of those
+     files changes, or visitors keep the old copy. -->
 <link rel="stylesheet" href="style.css?v=20261116b" />
 </head>
 <body>
@@ -122,12 +124,12 @@
       <!-- Captured from the app's own bar window by `npm run screenshots`:
            real markup, real stylesheet, real icons, rendered offscreen. -->
       <figure class="shot">
-        <img src="assets/bar-light.png" width="628" height="76"
+        <img src="assets/bar-light.png?v=20261116b" width="628" height="76"
              alt="The PopBar bar in light appearance: cut, copy, paste, search web, translate, speak, open link and UPPERCASE" />
         <figcaption>light appearance</figcaption>
       </figure>
       <figure class="shot dark">
-        <img src="assets/bar-dark.png" width="628" height="76"
+        <img src="assets/bar-dark.png?v=20261116b" width="628" height="76"
              alt="The same PopBar bar in dark appearance" />
         <figcaption>dark appearance</figcaption>
       </figure>

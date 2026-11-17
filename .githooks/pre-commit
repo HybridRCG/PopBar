@@ -27,7 +27,13 @@ head=$(git show "HEAD:$PAGE" 2>/dev/null || true)
 # Only real references count: a ?v= mentioned in a comment is not a link, and it
 # must be excluded on both sides or it wins the sort and defeats the comparison.
 refs_of() {
-  printf '%s\n' "$1" | grep -oE '(href|src)="[^":#]+\.(css|js|png)(\?[^"]*)?"' || true
+  # Local references, plus the social card, which is an absolute URL inside an
+  # og:image meta tag (absolute because that is what the protocol requires). A
+  # stale card is exactly as visible as a stale stylesheet.
+  {
+    printf '%s\n' "$1" | grep -oE '(href|src)="[^":#]+\.(css|js|png)(\?[^"]*)?"' || true
+    printf '%s\n' "$1" | grep -oE 'content="[^"]*assets/[^"]*\.png(\?[^"]*)?"' || true
+  }
 }
 refs=$(refs_of "$page")
 untokenised=$(printf '%s\n' "$refs" | grep -v '?v=' || true)

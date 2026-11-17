@@ -1,0 +1,59 @@
+#!/bin/sh
+# Refuses a commit that changes a file the project page links with a ?v= token
+# without bumping that token in web/index.html.
+#
+# The page is served through Cloudflare, which caches web/style.css,
+# web/downloads.js and the images in web/assets/ with no way to purge them from
+# here. The token is the only thing that makes a changed file reach visitors, so
+# it has to change on the same commit as the file it points at.
+#
+# Enable once per clone (hooks are not cloned automatically):
+#
+#     git config core.hooksPath .githooks
+#
+# Nothing here runs during a build or a deploy; it is a local guard only.
+set -eu
+
+PAGE=web/index.html
+WATCHED='web/style.css web/downloads.js web/assets'
+
+changed=$(git diff --cached --name-only --diff-filter=ACMRD \
+  | grep -E "^($(echo "$WATCHED" | tr ' ' '|'))(/|$)" || true)
+[ -z "$changed" ] && exit 0
+
+page=$(git show ":$PAGE" 2>/dev/null || true)
+head=$(git show "HEAD:$PAGE" 2>/dev/null || true)
+
+# Only real references count: a ?v= mentioned in a comment is not a link, and it
+# must be excluded on both sides or it wins the sort and defeats the comparison.
+refs_of() {
+  printf '%s\n' "$1" | grep -oE '(href|src)="[^":#]+\.(css|js|png)(\?[^"]*)?"' || true
+}
+refs=$(refs_of "$page")
+untokenised=$(printf '%s\n' "$refs" | grep -v '?v=' || true)
+tokens=$(printf '%s\n' "$refs" | grep -o '?v=[A-Za-z0-9._-]*' | sort -u || true)
+head_token=$(refs_of "$head" | grep -o '?v=[A-Za-z0-9._-]*' | sort -u | head -1 || true)
+
+fail() {
+  printf '\n  pre-commit: %s\n\n' "$1" >&2
+  printf '  Changed in this commit:\n' >&2
+  printf '    %s\n' $changed >&2
+  printf '\n  %s\n' "$2" >&2
+  printf '  Fix the ?v= token in %s, stage it, and commit again.\n\n' "$PAGE" >&2
+  exit 1
+}
+
+[ -z "$untokenised" ] || fail "a local file is linked without a ?v= token:" \
+  "$(printf '%s\n' "$untokenised" | sed 's/^/    /')"
+
+[ -n "$tokens" ] || fail "the page carries no ?v= token at all." \
+  "A linked file changed, so the token has to exist and change with it."
+
+[ "$(printf '%s\n' "$tokens" | wc -l | tr -d ' ')" = "1" ] \
+  || fail "the references carry different tokens: $(printf '%s, ' $tokens)" \
+  "Use one token for all of them, so a single bump covers the whole page."
+
+[ "$tokens" != "$head_token" ] || fail "the token was not bumped." \
+  "$PAGE still carries $tokens, exactly what HEAD has."
+
+exit 0

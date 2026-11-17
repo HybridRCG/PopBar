@@ -327,6 +327,16 @@ The download buttons ask the GitHub API for the newest release on page load and
 fall back to the releases page if that fails, so the page never offers a file
 name from an old version.
 
+The stylesheet, the script and the three images all carry a `?v=` token, because
+the host caches them and they cannot be purged from here: a replaced file only
+reaches visitors when that token changes. `.githooks/pre-commit` refuses a commit
+that touches one of those files without bumping the token in `web/index.html`.
+Hooks are not cloned, so enable it once per clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
 ## Releasing (working copy only)
 
 ```sh

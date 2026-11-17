@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
 <title>Not found — PopBar</title>
-<link rel="icon" href="assets/icon.png?v=20261117a" />
+<link rel="icon" href="/popbar/assets/icon.png?v=20261117a" />
 <style>
   :root { color-scheme: light dark; }
   html, body { height: 100%; margin: 0; }
@@ -28,10 +28,12 @@
 </head>
 <body>
   <main>
-    <img src="assets/bar-light.png?v=20261117a" alt="The PopBar bar" />
+    <!-- Absolute paths: this page is served for any missing path under /popbar,
+         including nested ones, where a relative URL would resolve elsewhere. -->
+    <img src="/popbar/assets/bar-light.png?v=20261117a" alt="The PopBar bar" />
     <h1>Nothing selected here</h1>
     <p>The page you asked for does not exist. The bar still works, though.</p>
-    <a href="./">Back to PopBar</a>
+    <a href="/popbar/">Back to PopBar</a>
   </main>
 </body>
 </html>

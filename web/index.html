@@ -274,7 +274,7 @@
 
     <details>
       <summary>How do updates work?</summary>
-      <p>PopBar checks the GitHub releases shortly after launch. On Windows it downloads and installs in place; on macOS an unsigned build cannot replace itself, so it tells you a new version exists and opens this page.</p>
+      <p>PopBar checks the GitHub releases shortly after launch and replaces itself in place on both platforms: it downloads the new build, checks its SHA-512, swaps it in and reopens. macOS keeps the Accessibility permission you granted across updates; if it ever asks again after one, grant it once.</p>
     </details>
 
     <details>

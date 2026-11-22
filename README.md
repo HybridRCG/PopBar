@@ -45,16 +45,17 @@ update that was downloaded also installs when you quit normally. **A check that
 fails on its own is a single log line, never a popup**; only a check you started
 yourself reports back.
 
-Two things still stand between this and a seamless update:
+Two things stop this working today, and both are about how the app is
+published rather than the updater:
 
-- **macOS builds carry a self-signed certificate, not a Developer ID, and are
-  not notarized.** Squirrel.Mac validates the signature of the downloaded app
-  and Gatekeeper vets the first launch; with no Apple team behind the
-  certificate neither can be satisfied the way Apple expects. A Developer ID
-  certificate plus notarization is the fix; Windows has no such requirement.
-- **An install made before the identifier-only requirement below needs one last
-  Accessibility grant**, once.
-
+- **The repository is private.** An unauthenticated client gets `404` from the
+  releases API — the log shows `update-error 404`. Pointing `build.publish` at a
+  public repository (or hosting the artifacts elsewhere) is what makes updates
+  real.
+- **macOS builds are only ad-hoc signed.** Squirrel.Mac validates the signature
+  of the downloaded app, and an ad-hoc signature has no team to validate, so a
+  Mac update is expected to download and then refuse to install. A Developer ID
+  certificate is the fix; Windows has no such requirement.
 
 On first launch macOS asks for **Accessibility** permission: System Settings →
 Privacy & Security → Accessibility → switch on **PopBar**. Until that is granted
@@ -280,35 +281,20 @@ folder needed to run it.
 
 An ad-hoc signature (`codesign --sign -`) hashes the whole binary, so every
 rebuild looks like a different app to macOS and the Accessibility permission is
-discarded each time. Release builds sign with a fixed self-signed certificate
-instead, and then set the designated requirement — the rule macOS remembers a
-permission against — by hand:
+discarded each time. `./scripts/build-app.sh` signs with a fixed self-signed
+certificate instead, which keeps the designated requirement constant:
 
-    designated => identifier "com.popbar.app"
+    identifier "com.popbar.app" and certificate root = H"dc15c7f3…"
 
-It is spelled that way for a reason. A requirement that names the certificate
-cannot be satisfied on a Mac that has not trusted that certificate, and macOS
-then falls back to the code hash, which changes with every build — so every
-update would cost that user the grant. Naming only the bundle identifier keeps
-the grant across updates everywhere, while the certificate stays in the
-signature itself. The identifier is read from the app's own `Info.plist` rather
-than written into the script, and `sign-mac.js` refuses to finish if the
-recorded requirement is anything else.
-
-The identity and its keychain
-(`~/Library/Keychains/popbar-signing.keychain-db`) are created once by
-`scripts/signing-setup.sh`, which `build-app.sh` calls when needed. The
+TCC matches that requirement, so the grant survives rebuilds. The identity and
+its keychain (`~/Library/Keychains/popbar-signing.keychain-db`) are created once
+by `scripts/signing-setup.sh`, which `build-app.sh` calls when needed. The
 keychain password is generated and kept in `.signing/` (mode 600, git-ignored)
 so signing never raises a password dialog.
 
-Grant Accessibility once per Mac; later updates satisfy the same requirement
-and keep the grant. Moving an install from a build that predates this
-requirement costs one more grant, because the requirement macOS recorded for the
-old app was a different one — after that it stays. `./scripts/build-app.sh`
-signs with the certificate but leaves the default, certificate-anchored
-requirement in place, which is fine on the Mac that owns the identity; switching
-between a build from it and a release build also costs one grant. If the
-identity is ever deleted, a new one is created and one re-grant is required.
+Grant Accessibility once after the first signed build. Rebuilds do not need it
+again. If the identity is ever deleted, a new one is created and one re-grant is
+required.
 
 Distributed builds are **not notarized** with an Apple Developer ID, so anyone
 downloading one has to right-click → *Open* the first time (or
@@ -351,23 +337,43 @@ Hooks are not cloned, so enable it once per clone:
 git config core.hooksPath .githooks
 ```
 
-## Releasing (working copy only)
+## Releasing (working copy only — full guide in `docs/releasing.md`)
 
 ```sh
-npm version patch          # bump package.json + lockfile
-npm run dist:mac           # macOS artifacts
-npm run dist:win           # Windows artifact
-shasum -a 256 .build/*.exe .build/*.dmg
-gh release create v<version> \
-  ".build/PopBar-Setup-<version>.exe" \
-  ".build/PopBar-<version>-universal.dmg" \
-  ".build/PopBar-<version>-universal.zip" \
-  .build/latest.yml .build/latest-mac.yml \
-  --title "PopBar <version>" --notes "…"
+bash scripts/signing-setup.sh   # once per machine: import and trust "PopBar Signing"
+node scripts/sign-mac.js --check
+
+npm version patch               # bump package.json + lockfile
+npm run dist:mac                # signed universal app, dmg, zip, latest-mac.yml
+npm run dist:win                # Windows installer
+
+npm run release:verify          # prove the artifacts (publishes nothing)
+npm run release                 # draft upload, size check, then publish
 ```
 
 Both installers carry the version from `package.json`, so bump it before
 building or the artifacts and the app disagree.
+
+`release:verify` mounts the dmg and unpacks the zip and refuses to continue
+unless the recorded requirement is exactly `identifier "com.popbar.app"`, the
+certificate (not an ad-hoc hash) is the signer, the `popbar-ax` helper is
+certificate-signed too, and both binaries are universal. It then writes
+`SHA256SUMS` over every uploaded file and signs it with the release key, so a
+release cannot go out half-verified or with a replaced asset.
+
+Users check an artifact with:
+
+```sh
+shasum -a 256 -c SHA256SUMS
+ssh-keygen -Y verify -f docs/release-key.pub -I release@popbar \
+  -n popbar-release -s SHA256SUMS.sig < SHA256SUMS
+```
+
+`docs/releasing.md` has the full flow: beta and rollback, certificate and key
+backup/rotation, the notarization steps that need an Apple Developer ID, and the
+Windows signing steps that need a code-signing certificate. It also lists what is
+still unproven (updates with an untrusted certificate, which process owns the
+Accessibility grant, and why the build is not on CI yet).
 
 ## When something does not work
 

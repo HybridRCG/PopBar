@@ -45,17 +45,23 @@ update that was downloaded also installs when you quit normally. **A check that
 fails on its own is a single log line, never a popup**; only a check you started
 yourself reports back.
 
-Two things stop this working today, and both are about how the app is
-published rather than the updater:
+The releases live in a public repository, so an unauthenticated client can fetch
+them. On macOS the update is installed by PopBar itself rather than by Squirrel:
+before anything is swapped, the download is checked against the signing
+requirement the installed app recorded, so a build signed any other way is
+refused instead of half-installed. Two limits remain, and both are about signing
+rather than the updater:
 
-- **The repository is private.** An unauthenticated client gets `404` from the
-  releases API — the log shows `update-error 404`. Pointing `build.publish` at a
-  public repository (or hosting the artifacts elsewhere) is what makes updates
-  real.
-- **macOS builds are only ad-hoc signed.** Squirrel.Mac validates the signature
-  of the downloaded app, and an ad-hoc signature has no team to validate, so a
-  Mac update is expected to download and then refuse to install. A Developer ID
-  certificate is the fix; Windows has no such requirement.
+- **The macOS certificate is PopBar's own, not Apple's.** Builds record the
+  requirement `identifier "com.popbar.app"`, which is what lets the Accessibility
+  grant survive an update, but no Mac trusts that certificate by default and the
+  download is not notarized, so Gatekeeper still wants right-click → *Open* on the
+  first launch. An Apple Developer ID is what would remove that.
+- **Installs from before the identifier-only signature need one manual
+  download.** Those builds recorded a code-hash requirement instead, which no
+  later build can satisfy, so their updater refuses the update rather than
+  replacing what is running. Download the current version once from Releases;
+  updates after that install by themselves.
 
 On first launch macOS asks for **Accessibility** permission: System Settings →
 Privacy & Security → Accessibility → switch on **PopBar**. Until that is granted
@@ -282,11 +288,13 @@ folder needed to run it.
 An ad-hoc signature (`codesign --sign -`) hashes the whole binary, so every
 rebuild looks like a different app to macOS and the Accessibility permission is
 discarded each time. `./scripts/build-app.sh` signs with a fixed self-signed
-certificate instead, which keeps the designated requirement constant:
+certificate instead, which keeps the designated requirement to the bundle id
+alone:
 
-    identifier "com.popbar.app" and certificate root = H"dc15c7f3…"
+    identifier "com.popbar.app"
 
-TCC matches that requirement, so the grant survives rebuilds. The identity and
+TCC matches that requirement, so the grant survives rebuilds — and updates,
+which are signed the same way. The identity and
 its keychain (`~/Library/Keychains/popbar-signing.keychain-db`) are created once
 by `scripts/signing-setup.sh`, which `build-app.sh` calls when needed. The
 keychain password is generated and kept in `.signing/` (mode 600, git-ignored)

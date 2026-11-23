@@ -194,10 +194,31 @@ the release notes that the key changed.
 
 These are known gaps, not things the pipeline checks:
 
-- **Update with an untrusted certificate.** Squirrel.Mac validates the downloaded
-  app's signature before installing; whether it accepts a *self-signed* certificate
-  as the update's signer has not been tested on a clean Mac. If it does not, shipped
-  updates need the Developer ID from §6.
+- **Update with an untrusted certificate.** The mechanism is known: Squirrel.Mac
+  takes the *running* app's designated requirement
+  (`SecCodeCopyDesignatedRequirement`) and validates the downloaded app against it
+  (`SecStaticCodeCheckValidityWithErrors` with nested-code, strict and
+  all-architectures checks). So an update installs only if the new build satisfies
+  the old build's requirement — which is exactly what the identifier-only rule
+  arranges. What is unproven is whether macOS accepts that on a machine that never
+  trusted the certificate, and whether the Accessibility grant survives; both need
+  the clean-Mac run described in the test document. If they fail, updates need the
+  Developer ID from §6.
+- **Migration from pre-fix builds.** Proven locally: an ad-hoc signature gets no
+  identifier in its requirement at all. Signing a copy of `/bin/echo` with
+  `codesign -s - -i com.popbar.app.ax` records
+
+  ```
+  # designated => cdhash H"134a31e8…" or cdhash H"1fffb95e…" or cdhash H"d66dfbd6…"
+  ```
+
+  A cdhash never matches a different build, so installs built before the
+  identifier-only change cannot auto-update to the first certificate-signed
+  release: Squirrel.Mac checks the new app against those hashes and refuses. Those
+  users need **one manual download** of the first identifier-only release. From
+  that build onwards the requirement is `identifier "com.popbar.app"` and later
+  updates pass. Say so in the release notes for that version rather than letting
+  them sit on a stale build that keeps reporting a failed update.
 - **Which process owns the Accessibility grant.** `popbar-ax` is the process that
   calls `AXIsProcessTrusted`, so the grant may be attributed to the helper rather
   than the app. The helper is now certificate-signed with its own identifier-only

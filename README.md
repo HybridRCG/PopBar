@@ -97,6 +97,10 @@ appears within two seconds of one is ignored — unless a key was pressed after
 the click, because a keyboard selection is always the user's own. Selections are
 never read from password fields; the clipboard is untouched in secure input.
 
+Once the bar is up, typing puts it away: the next key you press dismisses it, so
+it never sits over text you have gone back to editing. That is the only thing the
+helper knows about your keyboard — that a key went down, never which one.
+
 ## Extension library
 
 *Settings → Extension library* lists 31 ready-made actions in four groups

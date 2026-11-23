@@ -76,6 +76,9 @@ Then it writes `SHA256SUMS` (dmg, zip, exe, `latest.yml`, `latest-mac.yml`), sig
 it with `.signing/release-key`, uploads to a **draft** release, compares the remote
 asset sizes with the local files, and only then publishes the draft. An already
 published tag is refused — a new version gets a new tag, never replaced assets.
+A Windows feed left in `.build` by an earlier version is skipped instead of
+uploaded, so a macOS-only release cannot advertise an installer it does not
+contain.
 
 Useful flags: `--version <x>` (default: `package.json`) and `--notes <file>`
 (default: `.build/notes-<version>.md`).

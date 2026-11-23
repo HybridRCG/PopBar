@@ -35,14 +35,25 @@
     };
   }
 
-  /** Points one download button at the newest installer and fills its sub-label. */
+  /** The version inside an installer's file name: PopBar-Setup-1.0.12.exe → 1.0.12. */
+  function versionOf(asset) {
+    return (String(asset.name || '').match(/\d+\.\d+\.\d+/) || [])[0] || '';
+  }
+
+  /** Points one download button at its installer and fills its sub-label. */
   function apply(kind, asset, meta) {
     for (const anchor of anchorsFor(kind)) {
       const sub = anchor.querySelector('[data-role="meta"]');
       if (asset && asset.url) {
         anchor.href = asset.url;
         anchor.removeAttribute('title');
-        if (sub && asset.size) sub.textContent = meta(asset);
+        // Each button names the version it actually hands out. A platform can
+        // trail the newest release — a macOS-only version leaves Windows on the
+        // previous installer — so the release version alone would be a lie there.
+        if (sub && asset.size) {
+          const own = versionOf(asset);
+          sub.textContent = own ? `${meta(asset)} · ${own}` : meta(asset);
+        }
         anchor.dataset.file = asset.name;
       } else {
         anchor.href = RELEASES;

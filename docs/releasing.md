@@ -194,16 +194,21 @@ the release notes that the key changed.
 
 These are known gaps, not things the pipeline checks:
 
-- **Update with an untrusted certificate.** The mechanism is known: Squirrel.Mac
-  takes the *running* app's designated requirement
-  (`SecCodeCopyDesignatedRequirement`) and validates the downloaded app against it
-  (`SecStaticCodeCheckValidityWithErrors` with nested-code, strict and
-  all-architectures checks). So an update installs only if the new build satisfies
-  the old build's requirement — which is exactly what the identifier-only rule
-  arranges. What is unproven is whether macOS accepts that on a machine that never
-  trusted the certificate, and whether the Accessibility grant survives; both need
-  the clean-Mac run described in the test document. If they fail, updates need the
-  Developer ID from §6.
+- **Update with an untrusted certificate.** The requirement comparison is no
+  longer Squirrel's to make: PopBar swaps the bundle itself (Squirrel.Mac refused
+  the self-signed download, which is why `update-mac.js` exists), so
+  `src/main/update-signature.js` now does what Squirrel did — read the *running*
+  app's designated requirement (`codesign -d -r-`) and refuse a download that does
+  not satisfy it (`codesign --verify --strict -R=<requirement>`), before the swap
+  is scheduled. It is a requirement check, not a trust check: the certificate is
+  self-signed, so evaluating a trust anchor would refuse every update. `npm test`
+  builds that case with real bundles and proves both halves — a download that
+  fails the running app's requirement is refused with a message pointing at the
+  download page, and a differently-built later version that satisfies an
+  identifier-only requirement is accepted. What is still unproven is the macOS
+  side: whether the Accessibility grant survives the replacement on a machine that
+  never trusted the certificate, which needs the clean-Mac run in the test
+  document. If it does not, updates need the Developer ID from §6.
 - **Migration from pre-fix builds.** Proven locally: an ad-hoc signature gets no
   identifier in its requirement at all. Signing a copy of `/bin/echo` with
   `codesign -s - -i com.popbar.app.ax` records
@@ -214,7 +219,9 @@ These are known gaps, not things the pipeline checks:
 
   A cdhash never matches a different build, so installs built before the
   identifier-only change cannot auto-update to the first certificate-signed
-  release: Squirrel.Mac checks the new app against those hashes and refuses. Those
+  release: the update path compares the download against those hashes and refuses
+  it (`npm test` re-checks both halves — no identifier clause in the ad-hoc
+  requirement, and a different build with the same identifier failing it). Those
   users need **one manual download** of the first identifier-only release. From
   that build onwards the requirement is `identifier "com.popbar.app"` and later
   updates pass. Say so in the release notes for that version rather than letting

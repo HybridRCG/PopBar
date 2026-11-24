@@ -189,6 +189,10 @@ one.
 - **Minimum characters** — ignore very short selections.
 - **Never appear in these apps** — name fragments, e.g. `1Password`.
 - **Extensions** — import a PopClip extension, open the folder, reload.
+- **Help** — the short version of this README, in the window: when the bar appears
+  and what dismisses it, what each button does, your own actions, the history,
+  updates, where files live, and what to check when the bar never shows up.
+  *PopBar Help…* in the menu opens straight to it.
 
 ## Files
 

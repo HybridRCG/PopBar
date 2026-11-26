@@ -188,6 +188,10 @@ one.
 - **Start at login** — adds PopBar to Login Items.
 - **Minimum characters** — ignore very short selections.
 - **Never appear in these apps** — name fragments, e.g. `1Password`.
+- **Shortcut to bring the bar back** — Control+Alt+P by default. With text still
+  selected, press it after the bar has been dismissed to show the bar again for
+  that selection; empty turns it off, and a note says when macOS refuses a
+  combination another app owns.
 - **Extensions** — import a PopClip extension, open the folder, reload.
 - **Help** — the short version of this README, in the window: when the bar appears
   and what dismisses it, what each button does, your own actions, the history,

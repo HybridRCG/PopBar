@@ -1,13 +1,13 @@
 {
-  "generated": "2026-11-26T11:29:44.383Z",
-  "version": "1.0.17",
-  "release": "https://github.com/HybridRCG/PopBar/releases/tag/v1.0.17",
+  "generated": "2026-11-26T13:55:00.000Z",
+  "version": "1.0.18",
+  "release": "https://github.com/HybridRCG/PopBar/releases/tag/v1.0.18",
   "assets": {
     "mac": {
-      "name": "PopBar-1.0.17-universal.dmg",
-      "url": "https://github.com/HybridRCG/PopBar/releases/download/v1.0.17/PopBar-1.0.17-universal.dmg",
-      "size": 232214319,
-      "sha256": "257d1345b0bfa7f0e8d073434f2db7f35e6b13a580460e85ce347965ea685a6e"
+      "name": "PopBar-1.0.18-universal.dmg",
+      "url": "https://github.com/HybridRCG/PopBar/releases/download/v1.0.18/PopBar-1.0.18-universal.dmg",
+      "size": 232214687,
+      "sha256": "7d47688c304984ce2237abcf50bbb7cb8e82dbfce03819b0dca2f3cd2908ab78"
     },
     "win": {
       "name": "PopBar-Setup-1.0.12.exe",

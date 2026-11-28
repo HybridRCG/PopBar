@@ -108,6 +108,9 @@ What it does with what you drop:
   a real thumbnail for images, a clear file-type icon for everything else, and
   the size underneath. Several files dropped together become one **stack**;
   click it to open it, right-click it to ungroup.
+- **Make a stack yourself:** drag one row onto another (it lights up), or
+  right-click a file → *Stack With…* or *Stack All Loose Files*. Right-click a
+  file inside a stack → *Take Out of the Stack*.
 - **Drag a row back out** into the Finder, Mail or any other app to use it
   there. A whole stack drags out as all of its files at once. *Settings* can
   take a row off the shelf once it has been dragged out.

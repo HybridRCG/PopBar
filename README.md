@@ -4,7 +4,9 @@ Instant text actions, in the spirit of PopClip, for **macOS and Windows**:
 **select text in any app and a small toolbar appears next to it**, ready with the
 actions you use most — cut, copy, paste, web search, translate, speak, open the
 link, email a snippet, drop it in a new note, change the case, and whatever else
-you add through extensions.
+you add through extensions. For everything that is not text there is a
+**[drop shelf](#the-drop-shelf)**: shake the pointer while dragging and drop
+files, links or snippets onto it until you are ready to move them on.
 
 ```
 selected text ──▶ selection helper (native, per OS) ──▶ PopBar bar ──▶ action
@@ -86,6 +88,48 @@ there is no Dock or taskbar icon. Settings live under that icon →
 | UPPERCASE / lowercase / Capitalize | Puts the converted text on the clipboard |
 
 Each one can be switched off in Settings; hover a button to see its name.
+
+## The drop shelf
+
+Text is only half of what gets dragged around. The **drop shelf** holds what you
+are moving until you are ready to put it somewhere. It opens four ways:
+
+- **Shake the pointer** — start dragging a file, give it a quick shake, and the
+  shelf is there to drop into.
+- **A shortcut** — Control+Alt+S by default; press it again to put the shelf away.
+- **Drop files on the menu-bar icon**, or choose *Drop Shelf…* in its menu.
+- **Take a screenshot** (macOS) — a new capture lands on the shelf by itself.
+
+What it does with what you drop:
+
+- **Files, folders, links and text** go on the shelf as rows with a large icon:
+  a real thumbnail for images, a clear file-type icon for everything else, and
+  the size underneath. Several files dropped together become one **stack**;
+  click it to open it, right-click it to ungroup.
+- **Drag a row back out** into the Finder, Mail or any other app to use it
+  there. A whole stack drags out as all of its files at once. *Settings* can
+  take a row off the shelf once it has been dragged out.
+- **The buttons work on everything at once:** *Move…* sends every file to a
+  folder you pick, without overwriting what is already there (a number is added
+  instead). *ZIP…* makes one archive. *Reveal* shows the files in the Finder.
+  *Copy* puts every path and snippet on the clipboard, and *Paste* adds what the
+  clipboard holds.
+- **Right-click a row** for that item alone: Open, Quick Look, Reveal in Finder,
+  Share (Mail, Messages, AirDrop and the rest of the share sheet), Resize Image,
+  Extract Text from an image, Compress to ZIP, Cut, Copy, or Remove.
+- **✕ removes a row**, and *Clear shelf* empties it. Something you remove stays
+  removed — it does not come back with the next click or drag.
+- **Dropping only collects.** The original file stays where it was until you
+  press *Move…*, and the shelf is emptied when PopBar quits.
+- **It gets out of the way.** The shelf can hide itself after a while with the
+  pointer elsewhere. Hiding never removes anything, and Escape puts it away.
+
+Everything is set under *Settings → Drop shelf*: the shelf itself, its shortcut
+(type it or press *Record…*), the shake, and **shake sensitivity** — a slider
+from 1, a firm shake, to 10, a small wiggle, with Normal at 5.
+
+This is the one place PopBar borrows from [Dropover](https://dropoverapp.com/)'s
+idea of a temporary shelf; the bar itself is still for the selection you have.
 
 ## How it decides to appear
 
@@ -194,6 +238,10 @@ one.
   it). *Record…* captures the keys instead of typing them, Escape cancels, an
   empty field turns the shortcut off, and a note says when macOS refuses a
   combination another app owns.
+- **Drop shelf** — on or off; its shortcut (Control+Alt+S by default, with the
+  same *Record…* button as the bar's shortcut); opening it by a shake, and a
+  1–10 slider for how hard that shake has to be; hiding it by itself after a set
+  number of seconds; and taking a row off once it has been dragged out.
 - **Extensions** — import a PopClip extension, open the folder, reload.
 - **Help** — the short version of this README, in the window: when the bar appears
   and what dismisses it, what each button does, your own actions, the history,

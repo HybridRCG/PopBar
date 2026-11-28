@@ -109,7 +109,8 @@ What it does with what you drop:
   the size underneath. Several files dropped together become one **stack**;
   click it to open it, right-click it to ungroup.
 - **Several screens:** the shelf opens on the screen where you shook or
-  Shift-dragged, and remembers a spot you move it to on each screen.
+  Shift-dragged, and remembers a spot you move it to on each screen. A click
+  anywhere outside it puts it away.
 - **Make a stack yourself:** drag a shelf row — or a file from the Finder —
   onto a row; it lights up with *Drop to stack*. Or
   right-click a file → *Stack With…* or *Stack All Loose Files*. Right-click a

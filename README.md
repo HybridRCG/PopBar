@@ -92,10 +92,12 @@ Each one can be switched off in Settings; hover a button to see its name.
 ## The drop shelf
 
 Text is only half of what gets dragged around. The **drop shelf** holds what you
-are moving until you are ready to put it somewhere. It opens four ways:
+are moving until you are ready to put it somewhere. It opens five ways:
 
 - **Shake the pointer** — start dragging a file, give it a quick shake, and the
   shelf is there to drop into.
+- **Hold Shift while dragging** — press Shift partway through a drag of files or
+  text and the shelf opens under the pointer.
 - **A shortcut** — Control+Alt+S by default; press it again to put the shelf away.
 - **Drop files on the menu-bar icon**, or choose *Drop Shelf…* in its menu.
 - **Take a screenshot** (macOS) — a new capture lands on the shelf by itself.
@@ -117,10 +119,18 @@ What it does with what you drop:
 - **Right-click a row** for that item alone: Open, Quick Look, Reveal in Finder,
   Share (Mail, Messages, AirDrop and the rest of the share sheet), Resize Image,
   Extract Text from an image, Compress to ZIP, Cut, Copy, or Remove.
+- **Instant Actions** — drop on a tile instead of on the shelf and it happens
+  straight away: *Share*, *Move…*, *ZIP*, *Resize 50%*, *Text* (read the words
+  out of an image) and *Copy Path*. The tiles fill the empty shelf and float
+  over a full one while you drag.
 - **✕ removes a row**, and *Clear shelf* empties it. Something you remove stays
   removed — it does not come back with the next click or drag.
+- **Bring a shelf back.** The last ten cleared shelves are kept under *Recent
+  Shelves* in the menu-bar menu, and an empty shelf offers *Bring back the last
+  shelf*. Whatever was on the shelf when PopBar quit is there too. Files that
+  have since been deleted are skipped; stacks come back as stacks.
 - **Dropping only collects.** The original file stays where it was until you
-  press *Move…*, and the shelf is emptied when PopBar quits.
+  press *Move…*; the shelf starts empty each launch, with the last one a click away.
 - **It gets out of the way.** The shelf can hide itself after a while with the
   pointer elsewhere. Hiding never removes anything, and Escape puts it away.
 
@@ -241,7 +251,8 @@ one.
 - **Drop shelf** — on or off; its shortcut (Control+Alt+S by default, with the
   same *Record…* button as the bar's shortcut); opening it by a shake, and a
   1–10 slider for how hard that shake has to be; hiding it by itself after a set
-  number of seconds; and taking a row off once it has been dragged out.
+  number of seconds; taking a row off once it has been dragged out; opening it
+  with Shift while dragging; and showing the Instant Actions tiles.
 - **Extensions** — import a PopClip extension, open the folder, reload.
 - **Help** — the short version of this README, in the window: when the bar appears
   and what dismisses it, what each button does, your own actions, the history,
